@@ -16,6 +16,9 @@ namespace FirstProject
 
             BankAccount account = new BankAccount(ownerName);
 
+            Console.WriteLine($"Account created for {account.OwnerName}");
+            Console.WriteLine($"Account number: {account.AccountNumber}");
+
             bool isRunning = true;
 
             while (isRunning)

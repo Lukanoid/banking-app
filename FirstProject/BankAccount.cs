@@ -9,13 +9,14 @@ namespace FirstProject
     internal class BankAccount
     {
         public string OwnerName { get; private set; }
+        public string AccountNumber { get; private set; }
         public decimal Balance { get; private set; }
-
         public List<Transaction> Transactions { get; private set; }
 
         public BankAccount(string ownerName)
         {
             OwnerName = ownerName;
+            AccountNumber = GenerateAccountNumber();
             Balance = 0;
             Transactions = new List<Transaction>();
         }
@@ -75,6 +76,12 @@ namespace FirstProject
             {
                 Console.WriteLine($"{transaction.Type} - {transaction.Amount:F2} - {transaction.Date:dd/MM/yyyy HH:mm}");
             }
+        }
+
+        private string GenerateAccountNumber()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString();
         }
 
     }
