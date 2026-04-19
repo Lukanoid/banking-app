@@ -34,13 +34,23 @@ namespace FirstProject
                 {
                     case "1":
                         Console.WriteLine("Enter deposit amount: ");
-                        decimal depositAmount = decimal.Parse(Console.ReadLine());
-                        account.Deposit(depositAmount);
+                        if(decimal.TryParse(Console.ReadLine(), out decimal depositAmount)){
+                            account.Deposit(depositAmount);
+                        }else
+                        {
+                            Console.WriteLine("Invalid amount.");
+                        }
                         break;
                     case "2":
                         Console.WriteLine("Enter withdraw amount: ");
-                        decimal withdrawAmount = decimal.Parse(Console.ReadLine());
-                        account.Withdraw(withdrawAmount);
+                        if (decimal.TryParse(Console.ReadLine(), out decimal withdrawAmount)){
+                            account.Withdraw(withdrawAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount.");
+                        }
+                        
                         break;
                     case "3":
                         Console.WriteLine($"Current balance: {account.Balance}");
