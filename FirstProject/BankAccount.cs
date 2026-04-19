@@ -16,7 +16,7 @@ namespace FirstProject
         public BankAccount(string ownerName)
         {
             OwnerName = ownerName;
-            Balance = 0;
+            Balance = 1;
             Transactions = new List<Transaction>();
         }
 
