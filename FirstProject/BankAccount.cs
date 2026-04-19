@@ -62,5 +62,19 @@ namespace FirstProject
             }
         }
 
+        public void ShowTransactions()
+        {
+            if(Transactions.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                return;
+            }
+
+            foreach(Transaction transaction in Transactions)
+            {
+                Console.WriteLine($"{transaction.Type} - {transaction.Amount} - {transaction.Date}");
+            }
+        }
+
     }
 }

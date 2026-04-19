@@ -24,7 +24,8 @@ namespace FirstProject
                 Console.WriteLine("1. Deposit:");
                 Console.WriteLine("2. Withdraw:");
                 Console.WriteLine("3. Show Balance:");
-                Console.WriteLine("4. Exit:");
+                Console.WriteLine("4. Show Transactions:");
+                Console.WriteLine("5. Exit:");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -45,6 +46,9 @@ namespace FirstProject
                         Console.WriteLine($"Current balance: {account.Balance}");
                         break;
                     case "4":
+                        account.ShowTransactions();
+                        break;
+                    case "5":
                         isRunning = false;
                         Console.WriteLine("Goodbye!");
                         break;
