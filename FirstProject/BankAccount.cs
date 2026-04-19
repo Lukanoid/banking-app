@@ -8,10 +8,10 @@ namespace FirstProject
 {
     internal class BankAccount
     {
-        public string OwnerName { get; set; }
-        public decimal Balance { get; set; }
+        public string OwnerName { get; private set; }
+        public decimal Balance { get; private set; }
 
-        public List<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; private set; }
 
         public BankAccount(string ownerName)
         {
