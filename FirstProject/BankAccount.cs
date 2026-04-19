@@ -38,8 +38,28 @@ namespace FirstProject
             {
                 Console.WriteLine("Amount must be greater than 0.");
             }
+        }
 
-     
+        public void Withdraw(decimal amount)
+        {
+            if(amount <= 0)
+            {
+                Console.WriteLine("Amount must be greater than 0");
+            }
+            else if(amount > Balance)
+            {
+                Console.WriteLine("Insufficient funds.");
+            }
+            else
+            {
+                Balance -= amount;
+                Transaction transaction = new Transaction();
+                transaction.Type = "Withdrawal";
+                transaction.Amount = amount;
+                transaction.Date = DateTime.Now;
+                Transactions.Add(transaction);
+                Console.WriteLine("Withdrawal successful.");
+            }
         }
 
     }
