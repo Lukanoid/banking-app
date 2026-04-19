@@ -20,5 +20,27 @@ namespace FirstProject
             Transactions = new List<Transaction>();
         }
 
+        public void Deposit(decimal amount)
+        {
+            if(amount > 0)
+            {
+                Balance += amount;
+                Transaction transaction = new Transaction();
+                transaction.Type = "Deposit";
+                transaction.Amount = amount;
+                transaction.Date = DateTime.Now;
+
+                Transactions.Add(transaction);
+
+                Console.WriteLine("Deposit successful.");
+            }
+            else
+            {
+                Console.WriteLine("Amount must be greater than 0.");
+            }
+
+     
+        }
+
     }
 }

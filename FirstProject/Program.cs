@@ -16,8 +16,12 @@ namespace FirstProject
 
             BankAccount account = new BankAccount(ownerName);
 
-            Console.WriteLine($"Account creater for {account.OwnerName}");
-            Console.WriteLine($"Current balance {account.Balance}");
+            Console.Write("Enter amount to deposit: ");
+            decimal amount = decimal.Parse(Console.ReadLine());
+
+            account.Deposit(amount);
+
+            Console.WriteLine($"Current Balance: {account.Balance}");
         }
     }
 }
