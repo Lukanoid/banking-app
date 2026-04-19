@@ -70,9 +70,10 @@ namespace FirstProject
                 return;
             }
 
-            foreach(Transaction transaction in Transactions)
+            Console.WriteLine("Transaction History:");
+            foreach (Transaction transaction in Transactions)
             {
-                Console.WriteLine($"{transaction.Type} - {transaction.Amount} - {transaction.Date}");
+                Console.WriteLine($"{transaction.Type} - {transaction.Amount:F2} - {transaction.Date:dd/MM/yyyy HH:mm}");
             }
         }
 
