@@ -11,24 +11,22 @@ namespace FirstProject
     {
         static void Main(string[] args)
         {
-            Console.Write("Enter account owner name: ");
-            string ownerName = Console.ReadLine();
-
-            BankAccount account = new BankAccount(ownerName);
-
-            Console.WriteLine($"Account created for {account.OwnerName}");
-            Console.WriteLine($"Account number: {account.AccountNumber}");
+            BankSystem bankSystem = new BankSystem();
+            BankAccount selectedAccount = null;
 
             bool isRunning = true;
 
             while (isRunning)
             {
                 Console.WriteLine();
-                Console.WriteLine("1. Deposit:");
-                Console.WriteLine("2. Withdraw:");
-                Console.WriteLine("3. Show Balance:");
-                Console.WriteLine("4. Show Transactions:");
-                Console.WriteLine("5. Exit:");
+                Console.WriteLine("1. Create Account");
+                Console.WriteLine("2. Select Account");
+                Console.WriteLine("3. Deposit");
+                Console.WriteLine("4. Withdraw");
+                Console.WriteLine("5. Show Balance");
+                Console.WriteLine("6. Show Transaction History");
+                Console.WriteLine("7. Show All Accounts");
+                Console.WriteLine("8. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -36,40 +34,93 @@ namespace FirstProject
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("Enter deposit amount: ");
-                        if(decimal.TryParse(Console.ReadLine(), out decimal depositAmount)){
-                            account.Deposit(depositAmount);
-                        }else
-                        {
-                            Console.WriteLine("Invalid amount.");
-                        }
+                        Console.WriteLine("Enter owner name");
+                        string ownerName = Console.ReadLine();
+                        BankAccount newAccount = bankSystem.CreateAccount(ownerName);
+
+                        Console.WriteLine($"Account created for {newAccount.OwnerName}");
+                        Console.WriteLine($"Account number: {newAccount.AccountNumber}");
                         break;
                     case "2":
-                        Console.WriteLine("Enter withdraw amount: ");
-                        if (decimal.TryParse(Console.ReadLine(), out decimal withdrawAmount)){
-                            account.Withdraw(withdrawAmount);
+                        Console.WriteLine("Enter account number: ");
+                        string accountNumber = Console.ReadLine();
+
+                        selectedAccount = bankSystem.FindAccount(accountNumber);
+
+                        if(selectedAccount != null)
+                        {
+                            Console.WriteLine($"Selected account: {selectedAccount.AccountNumber}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Account not found.");
+                        }
+                        break;
+                    case "3":
+                        if(selectedAccount == null)
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
+                        Console.WriteLine("Enter amount to deposit: ");
+                        if(decimal.TryParse(Console.ReadLine(), out decimal depositAmount))
+                        {
+                            selectedAccount.Deposit(depositAmount);
                         }
                         else
                         {
                             Console.WriteLine("Invalid amount.");
                         }
-                        
-                        break;
-                    case "3":
-                        Console.WriteLine($"Current balance: {account.Balance}");
                         break;
                     case "4":
-                        account.ShowTransactions();
+                        if (selectedAccount == null)
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
+                        Console.WriteLine("Enter amount to withdraw: ");
+                        if (decimal.TryParse(Console.ReadLine(), out decimal withdrawAmount))
+                        {
+                            selectedAccount.Withdraw(withdrawAmount);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount.");
+                        }
                         break;
                     case "5":
+                        if (selectedAccount == null)
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
+
+                        Console.WriteLine($"Current balance: {selectedAccount.Balance}");
+                        break;
+                    case "6":
+                        if (selectedAccount == null)
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
+
+                        selectedAccount.ShowTransactionHistory();
+                        break;
+
+                    case "7":
+                        bankSystem.ShowAllAccounts();
+                        break;
+
+                    case "8":
                         isRunning = false;
                         Console.WriteLine("Goodbye!");
                         break;
+
                     default:
                         Console.WriteLine("Invalid option.");
                         break;
-                }
 
+                }
             }
         }
     }

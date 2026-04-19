@@ -63,7 +63,7 @@ namespace FirstProject
             }
         }
 
-        public void ShowTransactions()
+        public void ShowTransactionHistory()
         {
             if(Transactions.Count == 0)
             {
