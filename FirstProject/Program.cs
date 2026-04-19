@@ -16,12 +16,44 @@ namespace FirstProject
 
             BankAccount account = new BankAccount(ownerName);
 
-            Console.Write("Enter amount to deposit: ");
-            decimal amount = decimal.Parse(Console.ReadLine());
+            bool isRunning = true;
 
-            account.Deposit(amount);
+            while (isRunning)
+            {
+                Console.WriteLine();
+                Console.WriteLine("1. Deposit:");
+                Console.WriteLine("2. Withdraw:");
+                Console.WriteLine("3. Show Balance:");
+                Console.WriteLine("4. Exit:");
+                Console.Write("Choose an option: ");
 
-            Console.WriteLine($"Current Balance: {account.Balance}");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        Console.WriteLine("Enter deposit amount: ");
+                        decimal depositAmount = decimal.Parse(Console.ReadLine());
+                        account.Deposit(depositAmount);
+                        break;
+                    case "2":
+                        Console.WriteLine("Enter withdraw amount: ");
+                        decimal withdrawAmount = decimal.Parse(Console.ReadLine());
+                        account.Withdraw(withdrawAmount);
+                        break;
+                    case "3":
+                        Console.WriteLine($"Current balance: {account.Balance}");
+                        break;
+                    case "4":
+                        isRunning = false;
+                        Console.WriteLine("Goodbye!");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                }
+
+            }
         }
     }
 }
