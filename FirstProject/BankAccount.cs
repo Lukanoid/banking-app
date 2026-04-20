@@ -21,45 +21,38 @@ namespace FirstProject
             Transactions = new List<Transaction>();
         }
 
-        public void Deposit(decimal amount)
+        public OperationResult Deposit(decimal amount)
         {
             if(amount > 0)
             {
                 Balance += amount;
-                Transaction transaction = new Transaction();
-                transaction.Type = "Deposit";
-                transaction.Amount = amount;
-                transaction.Date = DateTime.Now;
-
+                Transaction transaction = new Transaction(TransactionType.Deposit, amount);
                 Transactions.Add(transaction);
 
-                Console.WriteLine("Deposit successful.");
+                return new OperationResult(true, "Deposit successful.");
             }
             else
             {
-                Console.WriteLine("Amount must be greater than 0.");
+                return new OperationResult(false, "Amount must be greater than 0.");
             }
         }
 
-        public void Withdraw(decimal amount)
+        public OperationResult Withdraw(decimal amount)
         {
             if(amount <= 0)
             {
-                Console.WriteLine("Amount must be greater than 0");
+                return new OperationResult(false, "Amount must be greater than 0.");
             }
             else if(amount > Balance)
             {
-                Console.WriteLine("Insufficient funds.");
+                return new OperationResult(false, "Insufficient funds");
             }
             else
             {
                 Balance -= amount;
-                Transaction transaction = new Transaction();
-                transaction.Type = "Withdrawal";
-                transaction.Amount = amount;
-                transaction.Date = DateTime.Now;
+                Transaction transaction = new Transaction(TransactionType.Withdraw, amount);
                 Transactions.Add(transaction);
-                Console.WriteLine("Withdrawal successful.");
+                return new OperationResult(true, "Withdraw successful");
             }
         }
 

@@ -8,8 +8,15 @@ namespace FirstProject
 {
     internal class Transaction
     {
-        public string Type { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
+        public TransactionType Type { get; }
+        public decimal Amount { get; }
+        public DateTime Date { get; }
+
+        public Transaction(TransactionType type, decimal amount)
+        {
+            Type = type;
+            Amount = amount;
+            Date = DateTime.Now;
+        }
     }
 }

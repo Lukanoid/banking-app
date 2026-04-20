@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="BankAccount.cs" />
     <Compile Include="BankSystem.cs" />
+    <Compile Include="OperationResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transaction.cs" />
+    <Compile Include="TransactionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

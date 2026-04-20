@@ -62,10 +62,11 @@ namespace FirstProject
                             Console.WriteLine("Please select an account first.");
                             break;
                         }
-                        Console.WriteLine("Enter amount to deposit: ");
+                        Console.Write("Enter amount to deposit: ");
                         if(decimal.TryParse(Console.ReadLine(), out decimal depositAmount))
                         {
-                            selectedAccount.Deposit(depositAmount);
+                            OperationResult result = selectedAccount.Deposit(depositAmount);
+                            Console.WriteLine(result.Message);
                         }
                         else
                         {
@@ -78,10 +79,11 @@ namespace FirstProject
                             Console.WriteLine("Please select an account first.");
                             break;
                         }
-                        Console.WriteLine("Enter amount to withdraw: ");
+                        Console.Write("Enter amount to withdraw: ");
                         if (decimal.TryParse(Console.ReadLine(), out decimal withdrawAmount))
                         {
-                            selectedAccount.Withdraw(withdrawAmount);
+                            OperationResult result = selectedAccount.Withdraw(withdrawAmount);
+                            Console.WriteLine(result.Message);
                         }
                         else
                         {
