@@ -47,7 +47,7 @@ namespace FirstProject
 
                         selectedAccount = bankSystem.FindAccount(accountNumber);
 
-                        if(CheckAccount(selectedAccount))
+                        if(HasSelectedAccount(selectedAccount))
                         {
                             Console.WriteLine($"Selected account: {selectedAccount.AccountNumber}");
                         }
@@ -57,7 +57,7 @@ namespace FirstProject
                         }
                         break;
                     case "3":
-                        if(!CheckAccount(selectedAccount))
+                        if(!HasSelectedAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -74,7 +74,7 @@ namespace FirstProject
                         }
                         break;
                     case "4":
-                        if (!CheckAccount(selectedAccount))
+                        if (!HasSelectedAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -91,7 +91,7 @@ namespace FirstProject
                         }
                         break;
                     case "5":
-                        if (!CheckAccount(selectedAccount))
+                        if (!HasSelectedAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -100,7 +100,7 @@ namespace FirstProject
                         Console.WriteLine($"Current balance: {selectedAccount.Balance}");
                         break;
                     case "6":
-                        if (!CheckAccount(selectedAccount))
+                        if (!HasSelectedAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
