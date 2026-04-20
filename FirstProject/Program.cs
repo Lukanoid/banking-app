@@ -126,7 +126,7 @@ namespace FirstProject
             }
         }
 
-        private static bool CheckAccount(BankAccount currentAccount)
+        private static bool HasSelectedAccount(BankAccount currentAccount)
         {
             return currentAccount != null;
         }
