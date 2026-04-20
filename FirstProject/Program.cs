@@ -47,7 +47,7 @@ namespace FirstProject
 
                         selectedAccount = bankSystem.FindAccount(accountNumber);
 
-                        if(selectedAccount != null)
+                        if(CheckAccount(selectedAccount))
                         {
                             Console.WriteLine($"Selected account: {selectedAccount.AccountNumber}");
                         }
@@ -57,7 +57,7 @@ namespace FirstProject
                         }
                         break;
                     case "3":
-                        if(selectedAccount == null)
+                        if(!CheckAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -73,7 +73,7 @@ namespace FirstProject
                         }
                         break;
                     case "4":
-                        if (selectedAccount == null)
+                        if (!CheckAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -89,7 +89,7 @@ namespace FirstProject
                         }
                         break;
                     case "5":
-                        if (selectedAccount == null)
+                        if (!CheckAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -98,7 +98,7 @@ namespace FirstProject
                         Console.WriteLine($"Current balance: {selectedAccount.Balance}");
                         break;
                     case "6":
-                        if (selectedAccount == null)
+                        if (!CheckAccount(selectedAccount))
                         {
                             Console.WriteLine("Please select an account first.");
                             break;
@@ -122,6 +122,11 @@ namespace FirstProject
 
                 }
             }
+        }
+
+        private static bool CheckAccount(BankAccount currentAccount)
+        {
+            return currentAccount != null;
         }
     }
 }
