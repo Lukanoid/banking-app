@@ -123,6 +123,13 @@ namespace FirstProject
                         if (receiverAccount == null)
                         {
                             Console.WriteLine("Receiver account not found.");
+                            break;
+                        }
+
+                        if(receiverAccount.AccountNumber == selectedAccount.AccountNumber)
+                        {
+                            Console.WriteLine("Cannot transfer to the same account.");
+                            break;
                         }
 
                         Console.WriteLine("Enter amount to transfer: ");
