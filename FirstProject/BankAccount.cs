@@ -5,17 +5,23 @@ namespace FirstProject
 {
     internal class BankAccount
     {
+        private List<Transaction> transactions;
         public string OwnerName { get; private set; }
         public string AccountNumber { get; private set; }
         public decimal Balance { get; private set; }
-        public List<Transaction> Transactions { get; private set; }
+
+
+        public IReadOnlyList<Transaction> Transactions
+        {
+            get { return transactions; }
+        }
 
         public BankAccount(string ownerName)
         {
             OwnerName = ownerName;
             AccountNumber = GenerateAccountNumber();
             Balance = 0;
-            Transactions = new List<Transaction>();
+            transactions = new List<Transaction>();
         }
 
         public OperationResult Deposit(decimal amount)
@@ -24,7 +30,7 @@ namespace FirstProject
             {
                 Balance += amount;
                 Transaction transaction = new Transaction(TransactionType.Deposit, amount);
-                Transactions.Add(transaction);
+                transactions.Add(transaction);
 
                 return new OperationResult(true, "Deposit successful.");
             }
@@ -48,7 +54,7 @@ namespace FirstProject
             {
                 Balance -= amount;
                 Transaction transaction = new Transaction(TransactionType.Withdraw, amount);
-                Transactions.Add(transaction);
+                transactions.Add(transaction);
                 return new OperationResult(true, "Withdraw successful");
             }
         }
