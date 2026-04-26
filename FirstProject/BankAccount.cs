@@ -61,7 +61,7 @@ namespace FirstProject
 
         public void ShowTransactionHistory()
         {
-            if(Transactions.Count == 0)
+            if(transactions.Count == 0)
             {
                 Console.WriteLine("No transactions found.");
                 return;
