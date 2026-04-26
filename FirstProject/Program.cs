@@ -21,7 +21,8 @@ namespace FirstProject
                 Console.WriteLine("5. Show Balance");
                 Console.WriteLine("6. Show Transaction History");
                 Console.WriteLine("7. Show All Accounts");
-                Console.WriteLine("8. Exit");
+                Console.WriteLine("8. Transfer");
+                Console.WriteLine("9. Exit");
                 Console.Write("Choose an option: ");
 
                 string choice = Console.ReadLine();
@@ -107,12 +108,40 @@ namespace FirstProject
                     case "7":
                         bankSystem.ShowAllAccounts();
                         break;
-
                     case "8":
+                        if(!HasSelectedAccount(selectedAccount))
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
+
+                        Console.WriteLine("Enter receiver account number: ");
+                        string receiverAccountNumber = Console.ReadLine();
+
+                        BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
+
+                        if (receiverAccount == null)
+                        {
+                            Console.WriteLine("Receiver account not found.");
+                        }
+
+                        Console.WriteLine("Enter amount to transfer: ");
+
+                        if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
+                        {
+                            OperationResult result = selectedAccount.TransferTo(receiverAccount, transferAmount);
+                            Console.WriteLine(result.Message);
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount.");
+                        }
+                        break;
+                    case "9":
                         isRunning = false;
                         Console.WriteLine("Goodbye!");
                         break;
-
                     default:
                         Console.WriteLine("Invalid option.");
                         break;

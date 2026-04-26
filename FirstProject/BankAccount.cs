@@ -26,7 +26,7 @@ namespace FirstProject
 
         public OperationResult Deposit(decimal amount)
         {
-            if(amount > 0)
+            if (amount > 0)
             {
                 Balance += amount;
                 Transaction transaction = new Transaction(TransactionType.Deposit, amount);
@@ -42,11 +42,11 @@ namespace FirstProject
 
         public OperationResult Withdraw(decimal amount)
         {
-            if(amount <= 0)
+            if (amount <= 0)
             {
                 return new OperationResult(false, "Amount must be greater than 0.");
             }
-            else if(amount > Balance)
+            else if (amount > Balance)
             {
                 return new OperationResult(false, "Insufficient funds");
             }
@@ -61,7 +61,7 @@ namespace FirstProject
 
         public void ShowTransactionHistory()
         {
-            if(transactions.Count == 0)
+            if (transactions.Count == 0)
             {
                 Console.WriteLine("No transactions found.");
                 return;
@@ -72,6 +72,36 @@ namespace FirstProject
             {
                 Console.WriteLine($"{transaction.Type} - {transaction.Amount:F2} - {transaction.Date:dd/MM/yyyy HH:mm}");
             }
+        }
+
+        public OperationResult TransferTo(BankAccount receiver, decimal amount)
+        {
+            if (receiver == null)
+            {
+                return new OperationResult(false, "Receiver account cannot be null.");
+            }
+            if (receiver == this)
+            {
+                return new OperationResult(false, "Cannot transfer to the same account.");
+            }
+
+            if (amount == 0)
+            {
+                return new OperationResult(false, "Amount must be greater than 0.");
+            }
+            if (amount > Balance)
+            {
+                return new OperationResult(false, "Insufficient funds.");
+            }
+
+            Balance -= amount;
+            receiver.Balance += amount;
+            Transaction transaction = new Transaction(TransactionType.Transfer, amount);
+            transactions.Add(transaction);
+            Transaction receiverTransaction = new Transaction(TransactionType.Transfer, amount);
+            receiver.transactions.Add(receiverTransaction);
+            return new OperationResult(true, "Transfer successful.");
+
         }
 
         private string GenerateAccountNumber()
