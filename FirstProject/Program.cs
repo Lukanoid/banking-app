@@ -134,51 +134,50 @@ namespace FirstProject
                         }
                         break;
                     case "8":
-                                if (!HasSelectedAccount(selectedAccount))
-                                {
-                                    Console.WriteLine("Please select an account first.");
-                                    break;
-                                }
+                        if (!HasSelectedAccount(selectedAccount))
+                        {
+                            Console.WriteLine("Please select an account first.");
+                            break;
+                        }
 
-                                Console.WriteLine("Enter receiver account number: ");
-                                string receiverAccountNumber = Console.ReadLine();
+                        Console.WriteLine("Enter receiver account number: ");
+                        string receiverAccountNumber = Console.ReadLine();
 
-                                BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
+                        BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
 
-                                if (receiverAccount == null)
-                                {
-                                    Console.WriteLine("Receiver account not found.");
-                                    break;
-                                }
+                        if (receiverAccount == null)
+                        {
+                            Console.WriteLine("Receiver account not found.");
+                            break;
+                        }
 
-                                if (receiverAccount.AccountNumber == selectedAccount.AccountNumber)
-                                {
-                                    Console.WriteLine("Cannot transfer to the same account.");
-                                    break;
-                                }
+                        if (receiverAccount.AccountNumber == selectedAccount.AccountNumber)
+                        {
+                            Console.WriteLine("Cannot transfer to the same account.");
+                            break;
+                        }
 
-                                Console.WriteLine("Enter amount to transfer: ");
+                        Console.WriteLine("Enter amount to transfer: ");
 
-                                if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
-                                {
-                                    OperationResult result = selectedAccount.TransferTo(receiverAccount, transferAmount);
-                                    Console.WriteLine(result.Message);
+                        if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
+                        {
+                            OperationResult result = selectedAccount.TransferTo(receiverAccount, transferAmount);
+                            Console.WriteLine(result.Message);
 
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Invalid amount.");
-                                }
-                                break;
-                            case "9":
-                                isRunning = false;
-                                Console.WriteLine("Goodbye!");
-                                break;
-                            default:
-                                Console.WriteLine("Invalid option.");
-                                break;
-
-                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid amount.");
+                        }
+                        break;
+                    case "9":
+                        isRunning = false;
+                        Console.WriteLine("Goodbye!");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option.");
+                        break;
+                    }
             }
         }
 
