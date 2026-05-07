@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FirstProject
 {
@@ -102,9 +103,20 @@ namespace FirstProject
                             break;
                         }
 
-                        selectedAccount.ShowTransactionHistory();
+                        IReadOnlyList<Transaction> transactionHistory = selectedAccount.GetTransactionHistory();
+                        if (transactionHistory.Count == 0)
+                        {
+                            Console.WriteLine("No transactions found.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Transaction History:");
+                            foreach (var transaction in transactionHistory)
+                            {
+                                Console.WriteLine($"{transaction.Date}: {transaction.Type} {transaction.Amount}");
+                            }
+                        }
                         break;
-
                     case "7":
                         bankSystem.ShowAllAccounts();
                         break;

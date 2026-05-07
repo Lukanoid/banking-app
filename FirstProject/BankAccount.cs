@@ -59,21 +59,6 @@ namespace FirstProject
             }
         }
 
-        public void ShowTransactionHistory()
-        {
-            if (transactions.Count == 0)
-            {
-                Console.WriteLine("No transactions found.");
-                return;
-            }
-
-            Console.WriteLine("Transaction History:");
-            foreach (Transaction transaction in Transactions)
-            {
-                Console.WriteLine($"{transaction.Type} - {transaction.Amount:F2} - {transaction.Date:dd/MM/yyyy HH:mm}");
-            }
-        }
-
         public OperationResult TransferTo(BankAccount receiver, decimal amount)
         {
             if (receiver == null)
@@ -102,6 +87,11 @@ namespace FirstProject
             receiver.transactions.Add(receiverTransaction);
             return new OperationResult(true, "Transfer successful.");
 
+        }
+
+        public IReadOnlyList<Transaction> GetTransactionHistory()
+        {
+            return transactions.AsReadOnly();
         }
 
         private string GenerateAccountNumber()
