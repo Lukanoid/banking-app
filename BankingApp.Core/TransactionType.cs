@@ -1,6 +1,6 @@
-﻿namespace FirstProject
+﻿namespace BankingApp.Core
 {
-    internal enum TransactionType
+    public enum TransactionType
     {
         Deposit,
         Withdraw,

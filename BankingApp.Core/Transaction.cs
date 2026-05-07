@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FirstProject
+namespace BankingApp.Core
 {
-    internal class Transaction
+    public class Transaction
     {
         public TransactionType Type { get; }
         public decimal Amount { get; }

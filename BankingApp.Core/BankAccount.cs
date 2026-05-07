@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FirstProject
+namespace BankingApp.Core
 {
-    internal class BankAccount
+    public class BankAccount
     {
         private List<Transaction> transactions;
         public string OwnerName { get; private set; }

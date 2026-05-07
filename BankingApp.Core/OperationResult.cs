@@ -1,6 +1,6 @@
-﻿namespace FirstProject
+﻿namespace BankingApp.Core
 {
-    internal class OperationResult
+    public class OperationResult
     {
         public bool IsSuccess { get; }
 

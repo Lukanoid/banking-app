@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FirstProject
+namespace BankingApp.Core
 {
-    internal class BankSystem
+    public class BankSystem
     {
         public List<BankAccount> Accounts { get; private set; }
 
