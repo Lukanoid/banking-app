@@ -85,7 +85,7 @@ namespace FirstProject
                 return new OperationResult(false, "Cannot transfer to the same account.");
             }
 
-            if (amount == 0)
+            if (amount <= 0)
             {
                 return new OperationResult(false, "Amount must be greater than 0.");
             }
