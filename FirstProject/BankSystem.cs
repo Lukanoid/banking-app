@@ -32,18 +32,9 @@ namespace FirstProject
             return null;
         }
 
-        public void ShowAllAccounts()
+        public IReadOnlyList<BankAccount> GetAllAccounts()
         {
-            if (Accounts.Count == 0)
-            {
-                Console.WriteLine("No accounts to show.");
-                return;
-            }
-
-            foreach (BankAccount account in Accounts)
-            {
-                Console.WriteLine($"{account.OwnerName} - {account.AccountNumber}");
-            }
+            return Accounts.AsReadOnly();
         }
     }
 }

@@ -118,54 +118,67 @@ namespace FirstProject
                         }
                         break;
                     case "7":
-                        bankSystem.ShowAllAccounts();
-                        break;
-                    case "8":
-                        if(!HasSelectedAccount(selectedAccount))
+                        IReadOnlyList<BankAccount> allAccounts = bankSystem.GetAllAccounts();
+                        
+                        if(allAccounts.Count == 0)
                         {
-                            Console.WriteLine("Please select an account first.");
-                            break;
-                        }
-
-                        Console.WriteLine("Enter receiver account number: ");
-                        string receiverAccountNumber = Console.ReadLine();
-
-                        BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
-
-                        if (receiverAccount == null)
-                        {
-                            Console.WriteLine("Receiver account not found.");
-                            break;
-                        }
-
-                        if(receiverAccount.AccountNumber == selectedAccount.AccountNumber)
-                        {
-                            Console.WriteLine("Cannot transfer to the same account.");
-                            break;
-                        }
-
-                        Console.WriteLine("Enter amount to transfer: ");
-
-                        if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
-                        {
-                            OperationResult result = selectedAccount.TransferTo(receiverAccount, transferAmount);
-                            Console.WriteLine(result.Message);
-
+                            Console.WriteLine("'No account to show.'");
                         }
                         else
                         {
-                            Console.WriteLine("Invalid amount.");
+                            Console.WriteLine("All Accounts:");
+                            foreach(BankAccount account in allAccounts)
+                            {
+                                Console.WriteLine($"{account.OwnerName} - {account.AccountNumber}");
+                            }
                         }
                         break;
-                    case "9":
-                        isRunning = false;
-                        Console.WriteLine("Goodbye!");
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
+                    case "8":
+                                if (!HasSelectedAccount(selectedAccount))
+                                {
+                                    Console.WriteLine("Please select an account first.");
+                                    break;
+                                }
 
-                }
+                                Console.WriteLine("Enter receiver account number: ");
+                                string receiverAccountNumber = Console.ReadLine();
+
+                                BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
+
+                                if (receiverAccount == null)
+                                {
+                                    Console.WriteLine("Receiver account not found.");
+                                    break;
+                                }
+
+                                if (receiverAccount.AccountNumber == selectedAccount.AccountNumber)
+                                {
+                                    Console.WriteLine("Cannot transfer to the same account.");
+                                    break;
+                                }
+
+                                Console.WriteLine("Enter amount to transfer: ");
+
+                                if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
+                                {
+                                    OperationResult result = selectedAccount.TransferTo(receiverAccount, transferAmount);
+                                    Console.WriteLine(result.Message);
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid amount.");
+                                }
+                                break;
+                            case "9":
+                                isRunning = false;
+                                Console.WriteLine("Goodbye!");
+                                break;
+                            default:
+                                Console.WriteLine("Invalid option.");
+                                break;
+
+                            }
             }
         }
 
