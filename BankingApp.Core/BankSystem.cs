@@ -5,7 +5,7 @@ namespace BankingApp.Core
 {
     public class BankSystem
     {
-        public List<BankAccount> Accounts { get; private set; }
+        private List<BankAccount> Accounts { get; set; }
 
         public BankSystem()
         {
