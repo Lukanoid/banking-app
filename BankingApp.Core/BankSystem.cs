@@ -14,7 +14,8 @@ namespace BankingApp.Core
 
         public BankAccount CreateAccount(string ownerName)
         {
-            BankAccount newAccount = new BankAccount(ownerName);
+            string accountNumber = GenerateAccountNumber();
+            BankAccount newAccount = new BankAccount(ownerName, accountNumber);
             Accounts.Add(newAccount);
             return newAccount;
         }
@@ -35,6 +36,19 @@ namespace BankingApp.Core
         public IReadOnlyList<BankAccount> GetAllAccounts()
         {
             return Accounts.AsReadOnly();
+        }
+
+        private string GenerateAccountNumber()
+        {
+            Random random = new Random();
+            string accountNumber = random.Next(100, 999).ToString();
+
+            if(FindAccount(accountNumber) != null)
+            {
+                return GenerateAccountNumber();
+            }
+
+            return accountNumber;
         }
     }
 }

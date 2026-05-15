@@ -16,10 +16,10 @@ namespace BankingApp.Core
             get { return transactions; }
         }
 
-        public BankAccount(string ownerName)
+        public BankAccount(string ownerName, string accountNumber)
         {
             OwnerName = ownerName;
-            AccountNumber = GenerateAccountNumber();
+            AccountNumber = accountNumber;
             Balance = 0;
             transactions = new List<Transaction>();
         }
@@ -94,11 +94,6 @@ namespace BankingApp.Core
             return transactions.AsReadOnly();
         }
 
-        private string GenerateAccountNumber()
-        {
-            Random random = new Random();
-            return random.Next(100000, 999999).ToString();
-        }
 
     }
 }
