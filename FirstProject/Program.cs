@@ -34,10 +34,16 @@ namespace FirstProject
                     case "1":
                         Console.WriteLine("Enter owner name");
                         string ownerName = Console.ReadLine();
-                        BankAccount newAccount = bankSystem.CreateAccount(ownerName);
-
-                        Console.WriteLine($"Account created for {newAccount.OwnerName}");
-                        Console.WriteLine($"Account number: {newAccount.AccountNumber}");
+                        try
+                        {
+                            BankAccount newAccount = bankSystem.CreateAccount(ownerName);
+                            Console.WriteLine($"Account created for {newAccount.OwnerName}");
+                            Console.WriteLine($"Account number: {newAccount.AccountNumber}");
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Error creating account: {e.Message}");
+                        }
                         break;
                     case "2":
                         Console.WriteLine("Enter account number: ");
