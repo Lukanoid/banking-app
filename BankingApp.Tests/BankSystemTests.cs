@@ -12,9 +12,9 @@ namespace BankingApp.Tests
 
             BankAccount account = bankSystem.CreateAccount("John Doe");
 
-            Assert.Single(bankSystem.Accounts);
+            Assert.Single(bankSystem.GetAllAccounts());
             Assert.Equal("John Doe", account.OwnerName);
-            Assert.Contains(account, bankSystem.Accounts);
+            Assert.Contains(account, bankSystem.GetAllAccounts());
         }
     }
 }
