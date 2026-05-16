@@ -51,5 +51,15 @@ namespace BankingApp.Tests
             Assert.NotNull(foundAccount);
             Assert.Same(accountToFind, foundAccount);
         }
+        
+        [Fact]
+        public void FindAccount_ShouldReturnNull_WhenAccountDoesNotExist()
+        {
+            BankSystem banksystem = new BankSystem();
+
+            BankAccount nullAcount = banksystem.FindAccount("123");
+
+            Assert.Null(nullAcount);
+        }
     }
 }
