@@ -29,5 +29,15 @@ namespace BankingApp.Tests
             Assert.Equal("Owner name cannot be empty.", whiteSpaceException.Message);
             Assert.Equal("Owner name cannot be empty.", emptyNameException.Message);
         }
+
+        [Fact]
+        public void GetAllAccounts_ShouldReturnEmptyList_WhenNoAccountsExist()
+        {
+            BankSystem banksystem = new BankSystem();
+
+            IReadOnlyList<BankAccount> accounts = banksystem.GetAllAccounts();
+
+            Assert.Empty(accounts);
+        }
     }
 }
