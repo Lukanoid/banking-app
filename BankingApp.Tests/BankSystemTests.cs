@@ -16,5 +16,18 @@ namespace BankingApp.Tests
             Assert.Equal("John Doe", account.OwnerName);
             Assert.Contains(account, bankSystem.GetAllAccounts());
         }
+
+        [Fact]
+        public void CreateAccount_ShouldThrowErrorWhenInvalidName()
+        {
+            BankSystem bankSystem = new BankSystem();
+
+            ArgumentException whiteSpaceException =  Assert.Throws<ArgumentException>(() => bankSystem.CreateAccount(" "));
+            ArgumentException emptyNameException = Assert.Throws<ArgumentException>(() => bankSystem.CreateAccount(""));
+
+            Assert.Empty(bankSystem.GetAllAccounts());
+            Assert.Equal("Owner name cannot be empty.", whiteSpaceException.Message);
+            Assert.Equal("Owner name cannot be empty.", emptyNameException.Message);
+        }
     }
 }
