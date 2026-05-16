@@ -42,6 +42,16 @@ namespace BankingApp.Tests
         }
 
         [Fact]
+        public void CreateAccount_ShouldTrimOwnerName()
+        {
+            BankSystem bankSystem = new BankSystem();
+
+            BankAccount account = bankSystem.CreateAccount(" John Doe ");
+
+            Assert.Equal("John Doe", account.OwnerName);
+        }
+
+        [Fact]
         public void GetAllAccounts_ShouldReturnEmptyList_WhenNoAccountsExist()
         {
             BankSystem banksystem = new BankSystem();

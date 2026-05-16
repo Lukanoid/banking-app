@@ -18,7 +18,16 @@ namespace BankingApp.Core
 
         public BankAccount(string ownerName, string accountNumber)
         {
-            OwnerName = ownerName;
+            if (string.IsNullOrWhiteSpace(ownerName))
+            {
+                throw new ArgumentException("Owner name cannot be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(accountNumber))
+            {
+                throw new ArgumentException("Account number cannot be empty.");
+            }
+            OwnerName = ownerName.Trim();
             AccountNumber = accountNumber;
             Balance = 0;
             transactions = new List<Transaction>();

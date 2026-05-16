@@ -14,10 +14,6 @@ namespace BankingApp.Core
 
         public BankAccount CreateAccount(string ownerName)
         {
-            if(string.IsNullOrWhiteSpace(ownerName))
-            {
-                throw new ArgumentException("Owner name cannot be empty.");
-            }
             string accountNumber = GenerateAccountNumber();
             BankAccount newAccount = new BankAccount(ownerName, accountNumber);
             Accounts.Add(newAccount);
