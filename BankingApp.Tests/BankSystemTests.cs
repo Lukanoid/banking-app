@@ -52,6 +52,21 @@ namespace BankingApp.Tests
         }
 
         [Fact]
+        public void GetAllAccounts_ShouldReturnAllCreatedAccounts()
+        {
+            BankSystem banksystem = new BankSystem();
+
+            BankAccount firstAccount = banksystem.CreateAccount("John Doe");
+            BankAccount secondAccount = banksystem.CreateAccount("John Doe");
+
+            IReadOnlyList<BankAccount> accounts = banksystem.GetAllAccounts();
+
+            Assert.Equal(2, accounts.Count);
+            Assert.Contains(firstAccount, accounts);
+            Assert.Contains(secondAccount, accounts);
+        }
+
+        [Fact]
         public void FindAccount_ShouldReturnReferenceToTheRightAccount()
         {
             BankSystem banksystem = new BankSystem();
