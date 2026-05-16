@@ -31,6 +31,17 @@ namespace BankingApp.Tests
         }
 
         [Fact]
+        public void CreateAccount_ShouldCreateUniqueAccountNumbers()
+        {
+            BankSystem banksystem = new BankSystem();
+
+            BankAccount firstAccount = banksystem.CreateAccount("John Doe");
+            BankAccount secondAccount = banksystem.CreateAccount("John Doe");
+
+            Assert.NotEqual(firstAccount.AccountNumber, secondAccount.AccountNumber);
+        }
+
+        [Fact]
         public void GetAllAccounts_ShouldReturnEmptyList_WhenNoAccountsExist()
         {
             BankSystem banksystem = new BankSystem();
