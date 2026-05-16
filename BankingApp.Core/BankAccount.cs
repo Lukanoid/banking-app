@@ -11,11 +11,6 @@ namespace BankingApp.Core
         public decimal Balance { get; private set; }
 
 
-        public IReadOnlyList<Transaction> Transactions
-        {
-            get { return transactions; }
-        }
-
         public BankAccount(string ownerName, string accountNumber)
         {
             if (string.IsNullOrWhiteSpace(ownerName))
