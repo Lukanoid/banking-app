@@ -39,5 +39,17 @@ namespace BankingApp.Tests
 
             Assert.Empty(accounts);
         }
+
+        [Fact]
+        public void FindAccount_ShouldReturnReferenceToTheRightAccount()
+        {
+            BankSystem banksystem = new BankSystem();
+
+            BankAccount accountToFind = banksystem.CreateAccount("John Doe");
+            BankAccount foundAccount = banksystem.FindAccount(accountToFind.AccountNumber);
+
+            Assert.NotNull(foundAccount);
+            Assert.Same(accountToFind, foundAccount);
+        }
     }
 }
