@@ -24,5 +24,25 @@ namespace BankingApp.Tests
             Assert.Equal("Owner name cannot be empty.", invalidName.Message);
 
         }
+
+        [Fact]
+        public void Constructor_ShouldThrowArgumentException_WhenAccountNumberIsInvalid()
+        {
+            ArgumentException emptyAccountNumber = Assert.Throws<ArgumentException>(() => new BankAccount("John Doe", ""));
+            ArgumentException whitespaceAccountNumber = Assert.Throws<ArgumentException>(() => new BankAccount("John Doe", " "));
+            ArgumentException nullAccountNumber = Assert.Throws<ArgumentException>(() => new BankAccount("John Doe", null));
+
+            Assert.Equal("Account number cannot be empty.", emptyAccountNumber.Message);
+            Assert.Equal("Account number cannot be empty.", whitespaceAccountNumber.Message);
+            Assert.Equal("Account number cannot be empty.", nullAccountNumber.Message);
+        }
+
+        [Fact]
+        public void Constructor_ShouldTrimOwnerName()
+        {
+            BankAccount bankAccount = new BankAccount(" John Doe ", "123");
+
+            Assert.Equal("John Doe", bankAccount.OwnerName);
+        }
     }
 }
