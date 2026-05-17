@@ -44,5 +44,15 @@ namespace BankingApp.Tests
 
             Assert.Equal("John Doe", bankAccount.OwnerName);
         }
+
+        [Fact]
+        public void Deposit_ShouldAddMoneyToBalance_WhenDataIsValid()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            bankAccount.Deposit(100m);
+
+            Assert.Equal(100m, bankAccount.Balance);
+        }
     }
 }
