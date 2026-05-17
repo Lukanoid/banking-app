@@ -44,5 +44,14 @@ namespace BankingApp.Tests
 
             Assert.Equal("John Doe", bankAccount.OwnerName);
         }
+
+        [Fact]
+        public void Constructor_ShouldInitializeTransactionsAndSetBalanceToZero()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            Assert.Equal(0m, bankAccount.Balance);
+            Assert.Empty(bankAccount.GetTransactionHistory());
+        }
     }
 }
