@@ -50,9 +50,11 @@ namespace BankingApp.Tests
         {
             BankAccount bankAccount = new BankAccount("John Doe", "123");
 
-            bankAccount.Deposit(100m);
+            OperationResult result = bankAccount.Deposit(100m);
 
             Assert.Equal(100m, bankAccount.Balance);
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Deposit successful.", result.Message);
         }
     }
 }
