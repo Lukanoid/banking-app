@@ -59,7 +59,7 @@ namespace BankingApp.Core
                 Balance -= amount;
                 Transaction transaction = new Transaction(TransactionType.Withdraw, amount);
                 transactions.Add(transaction);
-                return new OperationResult(true, "Withdraw successful");
+                return new OperationResult(true, "Withdraw successful.");
             }
         }
 

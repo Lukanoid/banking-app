@@ -83,5 +83,21 @@ namespace BankingApp.Tests
             Assert.Equal("Amount must be greater than 0.", result.Message);
             Assert.Empty(bankAccount.GetTransactionHistory());
         }
+
+        [Fact]
+        public void Withdraw_ShouldRemoveMoneyFromTheBalance_WhenAmoutIsValid()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            bankAccount.Deposit(1000m);
+
+            OperationResult result = bankAccount.Withdraw(100m);
+            IReadOnlyList<Transaction> transactions = bankAccount.GetTransactionHistory();
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(900m, bankAccount.Balance);
+            Assert.Equal("Withdraw successful.", result.Message);
+            Assert.Equal(2, transactions.Count);
+        }
     }
 }
