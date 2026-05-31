@@ -129,5 +129,20 @@ namespace BankingApp.Tests
             Assert.Equal("Amount must be greater than 0.", result.Message);
             Assert.Single(bankAccount.GetTransactionHistory());
         }
+
+        [Fact]
+        public void Withdraw_ShouldFailAndNotChangeBalance_WhenAmountIsMoreThanBalance()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            bankAccount.Deposit(1000m);
+
+            OperationResult result = bankAccount.Withdraw(2000m);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(1000m, bankAccount.Balance);
+            Assert.Equal("Insufficient funds", result.Message);
+            Assert.Single(bankAccount.GetTransactionHistory());
+        }
     }
 }
