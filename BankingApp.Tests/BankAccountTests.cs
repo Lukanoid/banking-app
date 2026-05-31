@@ -99,5 +99,20 @@ namespace BankingApp.Tests
             Assert.Equal("Withdraw successful.", result.Message);
             Assert.Equal(2, transactions.Count);
         }
+
+        [Fact]
+        public void Withdraw_ShouldFail_WhenAmountIsZero()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            bankAccount.Deposit(1000m);
+
+            OperationResult result = bankAccount.Withdraw(0m);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(1000m, bankAccount.Balance);
+            Assert.Equal("Amount must be greater than 0.", result.Message);
+            Assert.Single(bankAccount.GetTransactionHistory());
+        }
     }
 }
