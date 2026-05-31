@@ -144,5 +144,22 @@ namespace BankingApp.Tests
             Assert.Equal("Insufficient funds", result.Message);
             Assert.Single(bankAccount.GetTransactionHistory());
         }
+
+        [Fact]
+        public void Withdraw_ShouldSetBalanceToZero_WhenAmountIsEqualToBalance()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            bankAccount.Deposit(1000m);
+
+            OperationResult result = bankAccount.Withdraw(1000m);
+            IReadOnlyList<Transaction> transactions = bankAccount.GetTransactionHistory();
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(0m, bankAccount.Balance);
+            Assert.Equal("Withdraw successful.", result.Message);
+            Assert.Equal(2, transactions.Count);
+            Assert.Equal(TransactionType.Withdraw, transactions[1].Type);
+        }
     }
 }
