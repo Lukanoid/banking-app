@@ -55,7 +55,7 @@ namespace BankingApp.Tests
             Assert.Equal(100m, bankAccount.Balance);
             Assert.True(result.IsSuccess);
             Assert.Equal("Deposit successful.", result.Message);
-            Assert.NotEmpty(bankAccount.GetTransactionHistory());
+            Assert.Single(bankAccount.GetTransactionHistory());
         }
 
         [Fact]
