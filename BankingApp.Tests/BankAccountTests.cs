@@ -46,7 +46,7 @@ namespace BankingApp.Tests
         }
 
         [Fact]
-        public void Deposit_ShouldAddMoneyToBalance_WhenDataIsValid()
+        public void Deposit_ShouldAddMoneyToBalance_WhenAmountIsPositive()
         {
             BankAccount bankAccount = new BankAccount("John Doe", "123");
 
@@ -55,6 +55,18 @@ namespace BankingApp.Tests
             Assert.Equal(100m, bankAccount.Balance);
             Assert.True(result.IsSuccess);
             Assert.Equal("Deposit successful.", result.Message);
+        }
+
+        [Fact]
+        public void Deposit_ShouldNotAddMoneyToTheBalance_WhenDataIsZero()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            OperationResult result = bankAccount.Deposit(0m);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(0m, bankAccount.Balance);
+            Assert.Equal("Amount must be greater than 0.", result.Message);
         }
     }
 }
