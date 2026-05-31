@@ -55,6 +55,7 @@ namespace BankingApp.Tests
             Assert.Equal(100m, bankAccount.Balance);
             Assert.True(result.IsSuccess);
             Assert.Equal("Deposit successful.", result.Message);
+            Assert.NotEmpty(bankAccount.GetTransactionHistory());
         }
 
         [Fact]
@@ -67,6 +68,20 @@ namespace BankingApp.Tests
             Assert.False(result.IsSuccess);
             Assert.Equal(0m, bankAccount.Balance);
             Assert.Equal("Amount must be greater than 0.", result.Message);
+            Assert.Empty(bankAccount.GetTransactionHistory());
+        }
+
+        [Fact]
+        public void Deposit_ShouldNotAddMoneyToTheBalance_WhenDataIsBelowZero()
+        {
+            BankAccount bankAccount = new BankAccount("John Doe", "123");
+
+            OperationResult result = bankAccount.Deposit(-100m);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal(0, bankAccount.Balance);
+            Assert.Equal("Amount must be greater than 0.", result.Message);
+            Assert.Empty(bankAccount.GetTransactionHistory());
         }
     }
 }
