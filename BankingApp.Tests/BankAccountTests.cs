@@ -220,5 +220,20 @@ namespace BankingApp.Tests
             Assert.Single(transfererTransactionHistory);
             Assert.Empty(receiverTransactionHistory);
         }
+
+        [Fact]
+        public void TransferTo_ShouldFail_WhenTransfererIsTheSameAsReceiver()
+        {
+            BankAccount transferer = new BankAccount("John Doe", "123");
+
+            transferer.Deposit(1000m);
+            OperationResult result = transferer.TransferTo(transferer, 100m);
+            IReadOnlyList<Transaction> transfererTransactionHistory = transferer.GetTransactionHistory();
+
+            Assert.Equal(1000m, transferer.Balance);
+            Assert.Equal("Cannot transfer to the same account.", result.Message);
+            Assert.False(result.IsSuccess);
+            Assert.Single(transfererTransactionHistory);
+        }
     }
 }
