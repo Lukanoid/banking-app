@@ -161,5 +161,26 @@ namespace BankingApp.Tests
             Assert.Equal(2, transactions.Count);
             Assert.Equal(TransactionType.Withdraw, transactions[1].Type);
         }
+
+        [Fact]
+        public void TransferTo_ShouldTransferMoneyToAccount_WhenDataIsValid()
+        {
+            BankAccount transferer = new BankAccount("John Doe", "123");
+            BankAccount receiver = new BankAccount("Vasil Stamboliyski", "321");
+
+            transferer.Deposit(1000m);
+            OperationResult result = transferer.TransferTo(receiver, 100m);
+            IReadOnlyList<Transaction> transfererTransactionHistory = transferer.GetTransactionHistory();
+            IReadOnlyList<Transaction> receiverTransactionHistory = receiver.GetTransactionHistory();
+
+            Assert.Equal(900m, transferer.Balance);
+            Assert.Equal(100m, receiver.Balance);
+            Assert.Equal("Transfer successful.", result.Message);
+            Assert.True(result.IsSuccess);
+            Assert.Single(receiverTransactionHistory);
+            Assert.Equal(2, transfererTransactionHistory.Count);
+            Assert.Equal(TransactionType.Transfer, transfererTransactionHistory[1].Type);
+            Assert.Equal(TransactionType.Transfer, receiverTransactionHistory[0].Type);
+        }
     }
 }
