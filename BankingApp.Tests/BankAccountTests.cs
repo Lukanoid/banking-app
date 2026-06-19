@@ -235,5 +235,20 @@ namespace BankingApp.Tests
             Assert.False(result.IsSuccess);
             Assert.Single(transfererTransactionHistory);
         }
+
+        [Fact]
+        public void TransferTo_ShouldFail_WhenReceiverIsNull()
+        {
+            BankAccount transferer = new BankAccount("John Doe", "123");
+
+            transferer.Deposit(1000m);
+            OperationResult result = transferer.TransferTo(null, 100m);
+            IReadOnlyList<Transaction> transfererTransactionHistory = transferer.GetTransactionHistory();
+
+            Assert.Equal(1000m, transferer.Balance);
+            Assert.Equal("Receiver account cannot be null.", result.Message);
+            Assert.False(result.IsSuccess);
+            Assert.Single(transfererTransactionHistory);
+        }
     }
 }
