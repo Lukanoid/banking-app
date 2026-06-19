@@ -203,6 +203,25 @@ namespace BankingApp.Tests
         }
 
         [Fact]
+        public void TransferTo_ShouldFail_WhenAmountIsBelowZero()
+        {
+            BankAccount transferer = new BankAccount("John Doe", "123");
+            BankAccount receiver = new BankAccount("Vasil Stamboliyski", "321");
+
+            transferer.Deposit(1000m);
+            OperationResult result = transferer.TransferTo(receiver, -100m);
+            IReadOnlyList<Transaction> transfererTransactionHistory = transferer.GetTransactionHistory();
+            IReadOnlyList<Transaction> receiverTransactionHistory = receiver.GetTransactionHistory();
+
+            Assert.Equal(1000m, transferer.Balance);
+            Assert.Equal(0m, receiver.Balance);
+            Assert.Equal("Amount must be greater than 0.", result.Message);
+            Assert.False(result.IsSuccess);
+            Assert.Single(transfererTransactionHistory);
+            Assert.Empty(receiverTransactionHistory);
+        }
+
+        [Fact]
         public void TransferTo_ShouldFail_WhenTransferAmountIsMoreThanBalance()
         {
             BankAccount transferer = new BankAccount("John Doe", "123");
