@@ -269,5 +269,24 @@ namespace BankingApp.Tests
             Assert.False(result.IsSuccess);
             Assert.Single(transfererTransactionHistory);
         }
+
+        [Fact]
+        public void TransferTo_ShouldSucceed_WhenAmountIsEqualToBalance()
+        {
+            BankAccount transferer = new BankAccount("John Doe", "123");
+            BankAccount receiver = new BankAccount("Vasil Stamboliyski", "321");
+
+            transferer.Deposit(1000m);
+            OperationResult result = transferer.TransferTo(receiver, 1000m);
+            IReadOnlyList<Transaction> transfererTransactionHistory = transferer.GetTransactionHistory();
+            IReadOnlyList<Transaction> receiverTransactionHistory = receiver.GetTransactionHistory();
+
+            Assert.Equal(0m, transferer.Balance);
+            Assert.Equal(1000m, receiver.Balance);
+            Assert.Equal("Transfer successful.", result.Message);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(2, transfererTransactionHistory.Count);
+            Assert.Single(receiverTransactionHistory);
+        }
     }
 }
