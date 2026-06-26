@@ -61,7 +61,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapPost("/accounts/{accountNmber}/deposit", (string accountNumber, MoneyRequest request) =>
+            app.MapPost("/accounts/{accountNumber}/deposit", (string accountNumber, MoneyRequest request) =>
             {
             BankAccount account = bankSystem.FindAccount(accountNumber);
 
