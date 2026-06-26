@@ -147,7 +147,14 @@ namespace BankingApp.Api
                     return Results.NotFound("Account not found.");
                 }
 
-                return Results.Ok(account.GetTransactionHistory());
+                var transactions = account.GetTransactionHistory().Select(transaction => new
+                {
+                    Type = transaction.Type.ToString(),
+                    transaction.Amount,
+                    Data = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss")
+                });
+
+                return Results.Ok(transactions);
             });
 
             app.Run();
