@@ -84,7 +84,7 @@ namespace BankingApp.Api
             });
             });
 
-            app.MapPost("accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request) => 
+            app.MapPost("/accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request) => 
             {
                 BankAccount account = bankSystem.FindAccount(accountNumber);
                 
@@ -105,6 +105,49 @@ namespace BankingApp.Api
                     result.Message,
                     account.Balance
                 });
+            });
+
+            app.MapPost("/accounts/{accountNumber}/transfer", (string accountNumber, TransferRequest request) =>
+            {
+                BankAccount sender = bankSystem.FindAccount(accountNumber);
+
+                if(sender == null)
+                {
+                    return Results.NotFound("Sender account not found.");
+                }
+
+                BankAccount receiver = bankSystem.FindAccount(request.ReceiverAccountNumber);
+
+                if (receiver == null)
+                {
+                    return Results.NotFound("Receiver account not found.");
+                }
+
+                OperationResult result = sender.TransferTo(receiver, request.Amount);
+
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest(result.Message);
+                }
+
+                return Results.Ok(new
+                {
+                    result.Message,
+                    SenderBalance = sender.Balance,
+                    ReceiverBalance = receiver.Balance
+                });
+            });
+
+            app.MapGet("/accounts/{accountNumber}/transactions", (string accountNumber) =>
+            {
+                BankAccount account = bankSystem.FindAccount(accountNumber);
+
+                if (account == null)
+                {
+                    return Results.NotFound("Account not found.");
+                }
+
+                return Results.Ok(account.GetTransactionHistory());
             });
 
             app.Run();
