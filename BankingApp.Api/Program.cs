@@ -1,6 +1,7 @@
 using BankingApp.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using BankingApp.Api.Requests;
 
 namespace BankingApp.Api
 {
@@ -10,7 +11,13 @@ namespace BankingApp.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             BankSystem bankSystem = new BankSystem();
 
@@ -36,6 +43,45 @@ namespace BankingApp.Api
                     account.AccountNumber,
                     account.Balance
                 });
+            });
+
+            app.MapGet("/accounts/{accountNumber}", (string accountNumber) =>
+            {
+                BankAccount account = bankSystem.FindAccount(accountNumber);
+
+                if (account == null)
+                {
+                    return Results.NotFound("Account not found.");
+                }
+                return Results.Ok(new
+                {
+                    account.OwnerName,
+                    account.AccountNumber,
+                    account.Balance
+                });
+            });
+
+            app.MapPost("/accounts/{accountNmber}/deposit", (string accountNumber, MoneyRequest request) =>
+            {
+            BankAccount account = bankSystem.FindAccount(accountNumber);
+
+            if (account == null)
+            {
+                return Results.NotFound("Account not found.");
+            }
+
+            OperationResult result = account.Deposit(request.Amount);
+
+            if (!result.IsSuccess)
+            {
+                return Results.BadRequest(result.Message);
+            }
+
+            return Results.Ok(new 
+            {
+                result.Message,
+                account.Balance
+            });
             });
 
             app.Run();
