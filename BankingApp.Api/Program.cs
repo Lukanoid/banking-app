@@ -84,6 +84,29 @@ namespace BankingApp.Api
             });
             });
 
+            app.MapPost("accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request) => 
+            {
+                BankAccount account = bankSystem.FindAccount(accountNumber);
+                
+                if(account == null)
+                {
+                    return Results.NotFound("Account not found.");
+                }
+
+                OperationResult result = account.Withdraw(request.Amount);
+
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest(result.Message);
+                }
+
+                return Results.Ok(new
+                {
+                    result.Message,
+                    account.Balance
+                });
+            });
+
             app.Run();
         }
     }
