@@ -52,7 +52,7 @@ namespace BankingApp.Core
             }
             else if (amount > Balance)
             {
-                return new OperationResult(false, "Insufficient funds");
+                return new OperationResult(false, "Insufficient funds.");
             }
             else
             {

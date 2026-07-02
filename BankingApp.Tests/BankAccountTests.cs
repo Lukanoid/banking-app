@@ -141,7 +141,7 @@ namespace BankingApp.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Equal(1000m, bankAccount.Balance);
-            Assert.Equal("Insufficient funds", result.Message);
+            Assert.Equal("Insufficient funds.", result.Message);
             Assert.Single(bankAccount.GetTransactionHistory());
         }
 
