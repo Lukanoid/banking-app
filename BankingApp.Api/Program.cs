@@ -151,7 +151,7 @@ namespace BankingApp.Api
                 {
                     Type = transaction.Type.ToString(),
                     transaction.Amount,
-                    Data = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss")
+                    Date = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss")
                 });
 
                 return Results.Ok(transactions);
