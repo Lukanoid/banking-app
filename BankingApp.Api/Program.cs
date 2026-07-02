@@ -14,38 +14,40 @@ namespace BankingApp.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+
+            builder.Services.AddSingleton<BankSystem>();
             var app = builder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            BankSystem bankSystem = new BankSystem();
-
             app.MapGet("/", () => "Banking API is running");
 
-            app.MapGet("/accounts", () =>
+            app.MapGet("/accounts", (BankSystem bankSystem) =>
             {
-                return bankSystem.GetAllAccounts();
+                return Results.Ok(bankSystem.GetAllAccounts());
             });
 
-            app.MapPost("/accounts", (CreateAccountRequest request) =>
+            app.MapPost("/accounts", (CreateAccountRequest request, BankSystem bankSystem) =>
             {
-                if (string.IsNullOrWhiteSpace(request.OwnerName))
+                try
                 {
-                    return Results.BadRequest("Owner name is required.");
+                    BankAccount account = bankSystem.CreateAccount(request.OwnerName);
+
+                    return Results.Ok(new
+                    {
+                        account.OwnerName,
+                        account.AccountNumber,
+                        account.Balance
+                    });
                 }
-
-                BankAccount account = bankSystem.CreateAccount(request.OwnerName);
-
-                return Results.Ok(new
+                catch(ArgumentException ex)
                 {
-                    account.OwnerName,
-                    account.AccountNumber,
-                    account.Balance
-                });
+                    return Results.BadRequest(ex.Message);
+                }
             });
 
-            app.MapGet("/accounts/{accountNumber}", (string accountNumber) =>
+            app.MapGet("/accounts/{accountNumber}", (string accountNumber, BankSystem bankSystem) =>
             {
                 BankAccount account = bankSystem.FindAccount(accountNumber);
 
@@ -61,7 +63,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapPost("/accounts/{accountNumber}/deposit", (string accountNumber, MoneyRequest request) =>
+            app.MapPost("/accounts/{accountNumber}/deposit", (string accountNumber, MoneyRequest request, BankSystem bankSystem) =>
             {
             BankAccount account = bankSystem.FindAccount(accountNumber);
 
@@ -84,7 +86,7 @@ namespace BankingApp.Api
             });
             });
 
-            app.MapPost("/accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request) => 
+            app.MapPost("/accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request, BankSystem bankSystem) => 
             {
                 BankAccount account = bankSystem.FindAccount(accountNumber);
                 
@@ -107,7 +109,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapPost("/accounts/{accountNumber}/transfer", (string accountNumber, TransferRequest request) =>
+            app.MapPost("/accounts/{accountNumber}/transfer", (string accountNumber, TransferRequest request, BankSystem bankSystem) =>
             {
                 BankAccount sender = bankSystem.FindAccount(accountNumber);
 
@@ -138,7 +140,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapGet("/accounts/{accountNumber}/transactions", (string accountNumber) =>
+            app.MapGet("/accounts/{accountNumber}/transactions", (string accountNumber, BankSystem bankSystem) =>
             {
                 BankAccount account = bankSystem.FindAccount(accountNumber);
 
