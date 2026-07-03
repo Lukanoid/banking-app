@@ -50,5 +50,15 @@ namespace BankingApp.Core
 
             return accountNumber;
         }
+
+        public void LoadAccounts(IEnumerable<BankAccount> loadedAccounts)
+        {
+            Accounts.Clear();
+
+            foreach (BankAccount account in loadedAccounts)
+            {
+                Accounts.Add(account);
+            }
+        }
     }
 }

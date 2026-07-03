@@ -98,6 +98,25 @@ namespace BankingApp.Core
             return transactions.AsReadOnly();
         }
 
+        public static BankAccount Restore(
+            string ownerName,
+            string accountNumber,
+            decimal balance,
+            IEnumerable<Transaction> transactionHistory)
+        {
+            if (balance < 0)
+            {
+                throw new ArgumentException("Balance cannot be negative.");
+            }
+
+            BankAccount account = new BankAccount(ownerName, accountNumber);
+
+            account.Balance = balance;
+            account.transactions.AddRange(transactionHistory);
+
+            return account;
+        }
+
 
     }
 }
