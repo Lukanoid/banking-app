@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using BankingApp.Api.Requests;
 using BankingApp.Api.Responses;
+using BankingApp.Api.Persistence;
 
 namespace BankingApp.Api
 {
@@ -17,7 +18,15 @@ namespace BankingApp.Api
 
 
             builder.Services.AddSingleton<BankSystem>();
+            builder.Services.AddSingleton<IBankStorage, JsonBankStorage>();
+
             var app = builder.Build();
+
+            BankSystem bankSystem = app.Services.GetRequiredService<BankSystem>();
+            IBankStorage storage = app.Services.GetRequiredService<IBankStorage>();
+
+            List<BankAccount> savedAccounts = storage.LoadAccounts();
+            bankSystem.LoadAccounts(savedAccounts);
 
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -29,11 +38,13 @@ namespace BankingApp.Api
                 return Results.Ok(bankSystem.GetAllAccounts());
             });
 
-            app.MapPost("/accounts", (CreateAccountRequest request, BankSystem bankSystem) =>
+            app.MapPost("/accounts", (CreateAccountRequest request, BankSystem bankSystem, IBankStorage storage) =>
             {
                 try
                 {
                     BankAccount account = bankSystem.CreateAccount(request.OwnerName);
+
+                    storage.SaveAccounts(bankSystem.GetAllAccounts());
 
                     return Results.Ok(new AccountResponse
                     {
@@ -64,7 +75,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapPost("/accounts/{accountNumber}/deposit", (string accountNumber, MoneyRequest request, BankSystem bankSystem) =>
+            app.MapPost("/accounts/{accountNumber}/deposit", (string accountNumber, MoneyRequest request, BankSystem bankSystem, IBankStorage storage) =>
             {
             BankAccount account = bankSystem.FindAccount(accountNumber);
 
@@ -73,12 +84,14 @@ namespace BankingApp.Api
                 return Results.NotFound("Account not found.");
             }
 
-            OperationResult result = account.Deposit(request.Amount);
+                OperationResult result = account.Deposit(request.Amount);
 
             if (!result.IsSuccess)
             {
                 return Results.BadRequest(result.Message);
             }
+
+            storage.SaveAccounts(bankSystem.GetAllAccounts());
 
             return Results.Ok(new OperationResponse
             {
@@ -87,7 +100,7 @@ namespace BankingApp.Api
             });
             });
 
-            app.MapPost("/accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request, BankSystem bankSystem) => 
+            app.MapPost("/accounts/{accountNumber}/withdraw", (string accountNumber, MoneyRequest request, BankSystem bankSystem, IBankStorage storage) => 
             {
                 BankAccount account = bankSystem.FindAccount(accountNumber);
                 
@@ -103,6 +116,8 @@ namespace BankingApp.Api
                     return Results.BadRequest(result.Message);
                 }
 
+                storage.SaveAccounts(bankSystem.GetAllAccounts());
+
                 return Results.Ok(new OperationResponse
                 {
                     Message = result.Message,
@@ -110,7 +125,7 @@ namespace BankingApp.Api
                 });
             });
 
-            app.MapPost("/accounts/{accountNumber}/transfer", (string accountNumber, TransferRequest request, BankSystem bankSystem) =>
+            app.MapPost("/accounts/{accountNumber}/transfer", (string accountNumber, TransferRequest request, BankSystem bankSystem, IBankStorage storage) =>
             {
                 BankAccount sender = bankSystem.FindAccount(accountNumber);
 
@@ -132,6 +147,8 @@ namespace BankingApp.Api
                 {
                     return Results.BadRequest(result.Message);
                 }
+
+                storage.SaveAccounts(bankSystem.GetAllAccounts());
 
                 return Results.Ok(new TransferResponse
                 {
