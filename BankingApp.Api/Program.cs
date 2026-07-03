@@ -2,6 +2,7 @@ using BankingApp.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using BankingApp.Api.Requests;
+using BankingApp.Api.Responses;
 
 namespace BankingApp.Api
 {
@@ -34,11 +35,11 @@ namespace BankingApp.Api
                 {
                     BankAccount account = bankSystem.CreateAccount(request.OwnerName);
 
-                    return Results.Ok(new
+                    return Results.Ok(new AccountResponse
                     {
-                        account.OwnerName,
-                        account.AccountNumber,
-                        account.Balance
+                        OwnerName = account.OwnerName,
+                        AccountNumber = account.AccountNumber,
+                        Balance = account.Balance
                     });
                 }
                 catch(ArgumentException ex)
@@ -55,11 +56,11 @@ namespace BankingApp.Api
                 {
                     return Results.NotFound("Account not found.");
                 }
-                return Results.Ok(new
+                return Results.Ok(new AccountResponse
                 {
-                    account.OwnerName,
-                    account.AccountNumber,
-                    account.Balance
+                    OwnerName = account.OwnerName,
+                    AccountNumber = account.AccountNumber,
+                    Balance = account.Balance
                 });
             });
 
@@ -79,10 +80,10 @@ namespace BankingApp.Api
                 return Results.BadRequest(result.Message);
             }
 
-            return Results.Ok(new 
+            return Results.Ok(new OperationResponse
             {
-                result.Message,
-                account.Balance
+                Message = result.Message,
+                Balance = account.Balance
             });
             });
 
@@ -102,10 +103,10 @@ namespace BankingApp.Api
                     return Results.BadRequest(result.Message);
                 }
 
-                return Results.Ok(new
+                return Results.Ok(new OperationResponse
                 {
-                    result.Message,
-                    account.Balance
+                    Message = result.Message,
+                    Balance = account.Balance
                 });
             });
 
@@ -132,9 +133,9 @@ namespace BankingApp.Api
                     return Results.BadRequest(result.Message);
                 }
 
-                return Results.Ok(new
+                return Results.Ok(new TransferResponse
                 {
-                    result.Message,
+                    Message = result.Message,
                     SenderBalance = sender.Balance,
                     ReceiverBalance = receiver.Balance
                 });
@@ -149,10 +150,10 @@ namespace BankingApp.Api
                     return Results.NotFound("Account not found.");
                 }
 
-                var transactions = account.GetTransactionHistory().Select(transaction => new
+                var transactions = account.GetTransactionHistory().Select(transaction => new TransactionResponse
                 {
                     Type = transaction.Type.ToString(),
-                    transaction.Amount,
+                    Amount = transaction.Amount,
                     Date = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss")
                 });
 
