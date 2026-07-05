@@ -362,9 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Local persisted API data
-BankingApp.Api/Data/accounts.json
-
-# Local persisted API data
-**/Data/accounts.json
-**/accounts.json
+# Local API persisted data
+/BankingApp.Api/Data/
