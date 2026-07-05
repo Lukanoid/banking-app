@@ -367,3 +367,4 @@ BankingApp.Api/Data/accounts.json
 
 # Local persisted API data
 **/Data/accounts.json
+**/accounts.json
