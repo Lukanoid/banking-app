@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Local persisted API data
 BankingApp.Api/Data/accounts.json
+
+# Local persisted API data
+**/Data/accounts.json
