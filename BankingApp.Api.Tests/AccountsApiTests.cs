@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BankingApp.Api.Requests;
 using BankingApp.Api.Responses;
 using System.Net;
+using BankingApp.Core;
 
 namespace BankingApp.Api.Tests
 {
@@ -139,6 +140,26 @@ namespace BankingApp.Api.Tests
             HttpResponseMessage response = await client.GetAsync("/account/99999");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Deposit_ShouldIncreaseBalance_WhenAmountIsValid()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            OperationResponse operation = await ReadResponseAsync<OperationResponse>(response);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("Deposit successful.", operation.Message);
+            Assert.Equal(1000m, operation.Balance);
         }
     }
 }
