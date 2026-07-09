@@ -112,5 +112,22 @@ namespace BankingApp.Api.Tests
             Assert.Contains(accounts, account => account.AccountNumber == firstAccount.AccountNumber);
             Assert.Contains(accounts, account => account.AccountNumber == secondAcount.AccountNumber);
         }
+
+        [Fact]
+        public async Task GetAccountByNumber_ShouldReturnAccount_WhenAccountExists()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse createdAccount = await CreateAccountAsync(client, "John Doe");
+
+            HttpResponseMessage response = await client.GetAsync($"/accounts/{createdAccount.AccountNumber}");
+
+            AccountResponse account = await ReadResponseAsync<AccountResponse>(response);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(createdAccount.AccountNumber, account.AccountNumber);
+            Assert.Equal("John Doe", account.OwnerName);
+        }
     }
 }
