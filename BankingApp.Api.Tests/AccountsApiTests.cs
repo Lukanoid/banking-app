@@ -129,5 +129,16 @@ namespace BankingApp.Api.Tests
             Assert.Equal(createdAccount.AccountNumber, account.AccountNumber);
             Assert.Equal("John Doe", account.OwnerName);
         }
+
+        [Fact]
+        public async Task GetAccountByNumber_ShouldReturnNotFound_WhenAccountDoesNotExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            HttpResponseMessage response = await client.GetAsync("/account/99999");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }
