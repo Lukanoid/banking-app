@@ -93,5 +93,24 @@ namespace BankingApp.Api.Tests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("Owner name", message);
         }
+
+        [Fact]
+        public async Task GetAccounts_ShouldReturnCreatedAccounts()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse firstAccount = await CreateAccountAsync(client, "John Doe");
+            AccountResponse secondAcount = await CreateAccountAsync(client, "Vasil");
+
+            HttpResponseMessage response = await client.GetAsync("/accounts");
+
+            List<AccountResponse> accounts = await ReadResponseAsync<List<AccountResponse>>(response);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(2, accounts.Count);
+            Assert.Contains(accounts, account => account.AccountNumber == firstAccount.AccountNumber);
+            Assert.Contains(accounts, account => account.AccountNumber == secondAcount.AccountNumber);
+        }
     }
 }
