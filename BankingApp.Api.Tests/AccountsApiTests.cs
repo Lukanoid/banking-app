@@ -161,5 +161,24 @@ namespace BankingApp.Api.Tests
             Assert.Equal("Deposit successful.", operation.Message);
             Assert.Equal(1000m, operation.Balance);
         }
+
+        [Fact]
+        public async Task Deposit_ShouldReturnBadRequest_WhenDataIsInvalid()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = -1000m
+            });
+
+            string message = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("Amount must be greater than 0.", message);
+        }
     }
 }
