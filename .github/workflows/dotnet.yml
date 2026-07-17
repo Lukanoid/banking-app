@@ -23,11 +23,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore Core tests
+        run: dotnet restore BankingApp.Tests/BankingApp.Tests.csproj
 
-      - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+      - name: Restore API tests
+        run: dotnet restore BankingApp.Api.Tests/BankingApp.Api.Tests.csproj
 
-      - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Run Core tests
+        run: dotnet test BankingApp.Tests/BankingApp.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Run API tests
+        run: dotnet test BankingApp.Api.Tests/BankingApp.Api.Tests.csproj --configuration Release --no-restore --verbosity normal
