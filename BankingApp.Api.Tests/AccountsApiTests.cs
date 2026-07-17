@@ -1,14 +1,15 @@
-﻿using System;
+﻿using BankingApp.Api.Requests;
+using BankingApp.Api.Responses;
+using BankingApp.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using BankingApp.Api.Requests;
-using BankingApp.Api.Responses;
-using System.Net;
-using BankingApp.Core;
 
 namespace BankingApp.Api.Tests
 {
@@ -175,10 +176,11 @@ namespace BankingApp.Api.Tests
                 Amount = -1000m
             });
 
-            string message = await response.Content.ReadAsStringAsync();
-
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Contains("Amount must be greater than 0.", message);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Amount must be greater than 0.", message);
         }
 
         [Fact]
@@ -204,6 +206,31 @@ namespace BankingApp.Api.Tests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("Withdraw successful.", operation.Message);
             Assert.Equal(900m, operation.Balance);
+        }
+
+        [Fact]
+        public async Task Withdraw_ShouldReturnBadRequest_WhenDataIsInvalid()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/withdraw", new MoneyRequest
+            {
+                Amount = -100m
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Amount must be greater than 0.", message);
         }
     }
 }
