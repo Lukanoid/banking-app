@@ -260,5 +260,29 @@ namespace BankingApp.Api.Tests
             Assert.Equal(900m, transfer.SenderBalance);
             Assert.Equal(100m, transfer.ReceiverBalance);
         }
+
+        [Fact]
+        public async Task GetTransactions_ShouldReturnTransactionHistory_WhenTransacationsExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            HttpResponseMessage response = await client.GetAsync($"accounts/{account.AccountNumber}/transactions");
+
+            List<TransactionResponse> transactions = await ReadResponseAsync<List<TransactionResponse>>(response);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            TransactionResponse transaction = Assert.Single(transactions);
+            Assert.Equal("Deposit", transaction.Type);
+            Assert.Equal(1000m, transaction.Amount);
+            Assert.False(string.IsNullOrWhiteSpace(transaction.Date));
+        }
     }
 }
