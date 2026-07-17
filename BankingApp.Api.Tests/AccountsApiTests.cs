@@ -138,7 +138,7 @@ namespace BankingApp.Api.Tests
             using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
             using HttpClient client = factory.CreateClient();
 
-            HttpResponseMessage response = await client.GetAsync("/account/99999");
+            HttpResponseMessage response = await client.GetAsync("/accounts/99999");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -274,7 +274,7 @@ namespace BankingApp.Api.Tests
                 Amount = 1000m
             });
 
-            HttpResponseMessage response = await client.GetAsync($"accounts/{account.AccountNumber}/transactions");
+            HttpResponseMessage response = await client.GetAsync($"/accounts/{account.AccountNumber}/transactions");
 
             List<TransactionResponse> transactions = await ReadResponseAsync<List<TransactionResponse>>(response);
 

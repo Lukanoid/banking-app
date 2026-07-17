@@ -10,7 +10,7 @@ namespace BankingApp.Api.Tests
 {
     public class TestBankStorage : IBankStorage
     {
-        public List<BankAccount> SavedAccounts { get; set; } = new List<BankAccount>();
+        public List<BankAccount> SavedAccounts { get; private set; } = new List<BankAccount>();
 
         public List<BankAccount> LoadAccounts()
         {
