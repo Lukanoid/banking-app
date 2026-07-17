@@ -194,7 +194,7 @@ namespace BankingApp.Api.Tests
                 Amount = 1000m
             });
 
-            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts{account.AccountNumber}/withdraw", new MoneyRequest
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/withdraw", new MoneyRequest
             {
                 Amount = 100m
             });
