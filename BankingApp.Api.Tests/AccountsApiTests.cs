@@ -180,5 +180,30 @@ namespace BankingApp.Api.Tests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("Amount must be greater than 0.", message);
         }
+
+        [Fact]
+        public async Task Withdraw_ShouldDecreaseBalance_WhenAmountIsValid()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts{account.AccountNumber}/withdraw", new MoneyRequest
+            {
+                Amount = 100m
+            });
+
+            OperationResponse operation = await ReadResponseAsync<OperationResponse>(response);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("Withdraw successful.", operation.Message);
+            Assert.Equal(900m, operation.Balance);
+        }
     }
 }
