@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BankingApp.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FirstProject
 {
@@ -9,7 +10,7 @@ namespace FirstProject
         static void Main(string[] args)
         {
             BankSystem bankSystem = new BankSystem();
-            BankAccount selectedAccount = null;
+            BankAccount? selectedAccount = null;
 
             bool isRunning = true;
 
@@ -27,13 +28,13 @@ namespace FirstProject
                 Console.WriteLine("9. Exit");
                 Console.Write("Choose an option: ");
 
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
                         Console.WriteLine("Enter owner name");
-                        string ownerName = Console.ReadLine();
+                        string ownerName = Console.ReadLine() ?? string.Empty;
                         try
                         {
                             BankAccount newAccount = bankSystem.CreateAccount(ownerName);
@@ -47,7 +48,7 @@ namespace FirstProject
                         break;
                     case "2":
                         Console.WriteLine("Enter account number: ");
-                        string accountNumber = Console.ReadLine();
+                        string accountNumber = Console.ReadLine() ?? string.Empty;
 
                         selectedAccount = bankSystem.FindAccount(accountNumber);
 
@@ -148,9 +149,9 @@ namespace FirstProject
                         }
 
                         Console.WriteLine("Enter receiver account number: ");
-                        string receiverAccountNumber = Console.ReadLine();
+                        string receiverAccountNumber = Console.ReadLine() ?? string.Empty;
 
-                        BankAccount receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
+                        BankAccount? receiverAccount = bankSystem.FindAccount(receiverAccountNumber);
 
                         if (receiverAccount == null)
                         {
@@ -188,7 +189,7 @@ namespace FirstProject
             }
         }
 
-        private static bool HasSelectedAccount(BankAccount currentAccount)
+        private static bool HasSelectedAccount([NotNullWhen(true)] BankAccount? currentAccount)
         {
             return currentAccount != null;
         }
