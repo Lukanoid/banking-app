@@ -2,6 +2,6 @@
 {
     public class CreateAccountRequest
     {
-        public string OwnerName { get; set; }
+        public string OwnerName { get; set; } = string.Empty;
     }
 }

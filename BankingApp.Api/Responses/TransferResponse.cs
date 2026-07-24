@@ -2,7 +2,7 @@
 {
     public class TransferResponse
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty; 
         public decimal SenderBalance { get; set; }
         public decimal ReceiverBalance { get; set; }
 

@@ -2,7 +2,7 @@
 {
     public class TransferRequest
     {
-        public string ReceiverAccountNumber { get; set; }
+        public string ReceiverAccountNumber { get; set; }  = string.Empty;
 
         public decimal Amount { get; set; }
     }

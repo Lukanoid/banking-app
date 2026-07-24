@@ -2,7 +2,7 @@
 {
     public class OperationResponse
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
         public decimal Balance { get; set; }
 
     }
