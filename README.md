@@ -1,4 +1,4 @@
-# Banking App
+**# Banking App
 
 A small personal C# banking project built to practice **object-oriented programming**, **unit testing**, **ASP.NET Core Minimal APIs**, **dependency injection**, and **JSON persistence**.
 
@@ -714,3 +714,4 @@ The project is currently a working small banking backend with:
 * JSON persistence
 
 This project is built mainly for learning and practice.
+**

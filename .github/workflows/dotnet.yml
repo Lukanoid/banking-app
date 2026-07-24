@@ -1,0 +1,36 @@
+name: .NET Tests
+
+"on":
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore Core tests
+        run: dotnet restore BankingApp.Tests/BankingApp.Tests.csproj
+
+      - name: Restore API tests
+        run: dotnet restore BankingApp.Api.Tests/BankingApp.Api.Tests.csproj
+
+      - name: Run Core tests
+        run: dotnet test BankingApp.Tests/BankingApp.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Run API tests
+        run: dotnet test BankingApp.Api.Tests/BankingApp.Api.Tests.csproj --configuration Release --no-restore --verbosity normal
