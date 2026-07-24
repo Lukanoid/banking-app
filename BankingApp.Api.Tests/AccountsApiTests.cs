@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -184,6 +185,20 @@ namespace BankingApp.Api.Tests
         }
 
         [Fact]
+        public async Task Deposit_ShouldReturnNotFound_WhenAccountDoesNotExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("/accounts/123/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
         public async Task Withdraw_ShouldDecreaseBalance_WhenAmountIsValid()
         {
             using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
@@ -231,6 +246,20 @@ namespace BankingApp.Api.Tests
             string? message = await response.Content.ReadFromJsonAsync<string>();
 
             Assert.Equal("Amount must be greater than 0.", message);
+        }
+
+        [Fact]
+        public async Task Withdraw_ShouldReturnNotFound_WhenAccountDoesNotExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("/accounts/123/withdraw", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
