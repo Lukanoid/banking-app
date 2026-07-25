@@ -36,5 +36,15 @@ namespace BankingApp.Api.Tests
             Assert.Equal(1000m, transaction.Amount);
             Assert.False(string.IsNullOrWhiteSpace(transaction.Date));
         }
+        [Fact]
+        public async Task GetTransactions_ShouldReturnNotFound_WhenAccountDoesNotExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            HttpResponseMessage response = await client.GetAsync("/accounts/99999/transactions");
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }
