@@ -109,5 +109,29 @@ namespace BankingApp.Api.Tests
 
             Assert.Equal("Amount must be greater than 0.", message);
         }
+
+        [Fact]
+        public async Task Transfer_ShouldReturnBadRequest_WhenAmountIsNegative()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse sender = await CreateAccountAsync(client, "John Doe");
+            AccountResponse receiver = await CreateAccountAsync(client, "Vasil");
+
+            await DepositAsync(client, sender.AccountNumber, 1000m);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{sender.AccountNumber}/transfer", new TransferRequest
+            {
+                ReceiverAccountNumber = receiver.AccountNumber,
+                Amount = -100m
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Amount must be greater than 0.", message);
+        }
     }
 }
