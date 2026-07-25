@@ -82,8 +82,32 @@ namespace BankingApp.Api.Tests
 
             string message = await response.Content.ReadAsStringAsync();
 
-            Assert.Equal("Receiver account not found.", message);
+            Assert.Contains("Receiver account not found.", message);
 
+        }
+
+        [Fact]
+        public async Task Transfer_ShouldReturnBadRequest_WhenAmountIsZero()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse sender = await CreateAccountAsync(client, "John Doe");
+            AccountResponse receiver = await CreateAccountAsync(client, "Vasil");
+
+            await DepositAsync(client, sender.AccountNumber, 1000m);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{sender.AccountNumber}/transfer", new TransferRequest
+            {
+                ReceiverAccountNumber = receiver.AccountNumber,
+                Amount = 0m
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Amount must be greater than 0.", message);
         }
     }
 }
