@@ -156,5 +156,28 @@ namespace BankingApp.Api.Tests
 
             Assert.Equal("Cannot transfer to the same account.", message);
         }
+        [Fact]
+        public async Task Transfer_ShouldReturnBadRequest_WhenAmountIsMoreThanBalance()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse sender = await CreateAccountAsync(client, "John Doe");
+            AccountResponse receiver = await CreateAccountAsync(client, "Vasil");
+
+            await DepositAsync(client, sender.AccountNumber, 100m);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{sender.AccountNumber}/transfer", new TransferRequest
+            {
+                ReceiverAccountNumber = receiver.AccountNumber,
+                Amount = 200m
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Insufficient funds.", message);
+        }
     }
 }
