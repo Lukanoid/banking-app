@@ -127,14 +127,14 @@ namespace BankingApp.Api.Endpoints
 
             accounts.MapPost("/{accountNumber}/transfer", (string accountNumber, TransferRequest request, BankSystem bankSystem, IBankStorage storage) =>
             {
-                BankAccount sender = bankSystem.FindAccount(accountNumber);
+                BankAccount? sender = bankSystem.FindAccount(accountNumber);
 
                 if (sender == null)
                 {
                     return Results.NotFound("Sender account not found.");
                 }
 
-                BankAccount receiver = bankSystem.FindAccount(request.ReceiverAccountNumber);
+                BankAccount? receiver = bankSystem.FindAccount(request.ReceiverAccountNumber);
 
                 if (receiver == null)
                 {

@@ -32,7 +32,7 @@ namespace BankingApp.Api.Tests
 
         public static async Task DepositAsync(HttpClient client, string accountNumber, decimal amount)
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/${accountNumber}/deposit", new MoneyRequest
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{accountNumber}/deposit", new MoneyRequest
             {
                 Amount = amount
             });
