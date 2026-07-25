@@ -97,5 +97,25 @@ namespace BankingApp.Api.Tests
 
             Assert.Equal("Insufficient funds.", message);
         }
+
+        [Fact]
+        public async Task Withdraw_ShouldReturnBadRequest_WhenAmountIsZero()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse account = await CreateAccountAsync(client, "John Doe");
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"/accounts/{account.AccountNumber}/withdraw", new MoneyRequest
+            {
+                Amount = 0m
+            });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Amount must be greater than 0.", message);
+        }
     }
 }
