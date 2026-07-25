@@ -40,5 +40,26 @@ namespace BankingApp.Api.Tests
             Assert.Equal(900m, transfer.SenderBalance);
             Assert.Equal(100m, transfer.ReceiverBalance);
         }
+
+        [Fact]
+        public async Task Transfer_ShouldReturnNotFound_WhenSenderDoesNotExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse receiver = await CreateAccountAsync(client, "Vasil");
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("/accounts/99999/transfer", new TransferRequest
+            {
+                ReceiverAccountNumber = receiver.AccountNumber,
+                Amount = 100m
+            });
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            string? message = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Equal("Sender account not found.", message);
+        }
     }
 }
