@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static BankingApp.Api.Tests.ApiTestHelpers;
 
 namespace BankingApp.Api.Tests
 {
@@ -21,31 +22,6 @@ namespace BankingApp.Api.Tests
             PropertyNameCaseInsensitive = true,
         };
 
-        private static async Task<T> ReadResponseAsync<T>(HttpResponseMessage responses)
-        {
-            string json = await responses.Content.ReadAsStringAsync();
-
-            T? result = JsonSerializer.Deserialize<T>(json, JsonOptions);
-
-            if(result == null)
-            {
-                throw new InvalidOperationException("Could not deserialize response.");
-            }
-
-            return result;
-        }
-
-        private static async Task<AccountResponse> CreateAccountAsync(HttpClient client, string ownerName)
-        {
-            HttpResponseMessage response = await client.PostAsJsonAsync("/accounts", new CreateAccountRequest
-            {
-                OwnerName = ownerName
-            });
-
-            response.EnsureSuccessStatusCode();
-
-            return await ReadResponseAsync<AccountResponse>(response);
-        }
 
         [Fact]
         public async Task GetRoot_ShouldReturnRunningMessage()
