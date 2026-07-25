@@ -2,9 +2,6 @@
 using BankingApp.Api.Requests;
 using BankingApp.Api.Responses;
 using BankingApp.Core;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 namespace BankingApp.Api.Endpoints
 {

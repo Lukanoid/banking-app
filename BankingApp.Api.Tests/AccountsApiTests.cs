@@ -1,16 +1,8 @@
 ﻿using BankingApp.Api.Requests;
 using BankingApp.Api.Responses;
-using BankingApp.Core;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using System.Security.Principal;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using static BankingApp.Api.Tests.ApiTestHelpers;
 
 namespace BankingApp.Api.Tests

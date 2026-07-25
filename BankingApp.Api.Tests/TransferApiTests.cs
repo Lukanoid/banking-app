@@ -1,17 +1,12 @@
 ﻿using BankingApp.Api.Requests;
 using BankingApp.Api.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using static BankingApp.Api.Tests.ApiTestHelpers;
 
 namespace BankingApp.Api.Tests
 {
-    public class TransferToApiTests
+    public class TransferApiTests
     {
         [Fact]
         public async Task Transfer_ShouldMoveMoneyBetweenAccounts_WhenDataIsValid()
