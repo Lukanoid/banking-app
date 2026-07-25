@@ -78,6 +78,7 @@ namespace BankingApp.Api.Tests
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+        [Fact]  
         public async Task Withdraw_ShouldReturnBadRequest_WhenAmountIsMoreThanBalance()
         {
             using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
