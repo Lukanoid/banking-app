@@ -13,7 +13,6 @@ namespace BankingApp.Api.Persistence
         {
             this.context = context;
 
-            context.Database.EnsureCreated();
         }
 
         public List<BankAccount> LoadAccounts()

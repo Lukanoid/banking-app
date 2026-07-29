@@ -1,10 +1,7 @@
 using BankingApp.Core;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using BankingApp.Api.Requests;
-using BankingApp.Api.Responses;
 using BankingApp.Api.Persistence;
 using BankingApp.Api.Endpoints;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Api
 {
@@ -19,15 +16,34 @@ namespace BankingApp.Api
 
 
             builder.Services.AddSingleton<BankSystem>();
-            builder.Services.AddSingleton<IBankStorage, JsonBankStorage>();
+
+            string DataDirectory = Path.Combine(builder.Environment.ContentRootPath, "Data");
+            Directory.CreateDirectory(DataDirectory);
+
+            string databasePath = Path.Combine(DataDirectory, "banking.db");
+
+            builder.Services.AddDbContext<BankDbContext>(options =>
+            {
+                options.UseSqlite($"data Source={databasePath}");
+            });
+
+            builder.Services.AddScoped<IBankStorage, SqliteBankStorage>();
 
             var app = builder.Build();
 
-            BankSystem bankSystem = app.Services.GetRequiredService<BankSystem>();
-            IBankStorage storage = app.Services.GetRequiredService<IBankStorage>();
+            if (!app.Environment.IsEnvironment("Testing"))
+            {
+                using IServiceScope scope = app.Services.CreateScope();
 
-            List<BankAccount> savedAccounts = storage.LoadAccounts();
-            bankSystem.LoadAccounts(savedAccounts);
+                BankDbContext context = scope.ServiceProvider.GetRequiredService<BankDbContext>();
+                context.Database.EnsureCreated();
+
+                BankSystem bankSystem = scope.ServiceProvider.GetRequiredService<BankSystem>();
+                IBankStorage storage = scope.ServiceProvider.GetRequiredService<IBankStorage>();
+
+                List<BankAccount> savedAccounts = storage.LoadAccounts();
+                bankSystem.LoadAccounts(savedAccounts);
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();
