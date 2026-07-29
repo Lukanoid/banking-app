@@ -6,7 +6,7 @@ namespace BankingApp.Api.Persistence.Entities
     {
         public int Id { get; set; }
 
-        public TransactionType type { get; set; }
+        public TransactionType Type { get; set; }
 
         public decimal Amount  { get; set; }
 
