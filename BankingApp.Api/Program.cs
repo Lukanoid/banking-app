@@ -36,7 +36,7 @@ namespace BankingApp.Api
                 using IServiceScope scope = app.Services.CreateScope();
 
                 BankDbContext context = scope.ServiceProvider.GetRequiredService<BankDbContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
 
                 BankSystem bankSystem = scope.ServiceProvider.GetRequiredService<BankSystem>();
                 IBankStorage storage = scope.ServiceProvider.GetRequiredService<IBankStorage>();
