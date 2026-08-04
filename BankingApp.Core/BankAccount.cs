@@ -33,7 +33,11 @@ namespace BankingApp.Core
             if (amount > 0)
             {
                 Balance += amount;
-                Transaction transaction = new Transaction(TransactionType.Deposit, amount);
+                Transaction transaction = new Transaction(
+                    TransactionType.Deposit,
+                    amount,
+                    "Deposit"
+                );
                 transactions.Add(transaction);
 
                 return new OperationResult(true, "Deposit successful.");
@@ -57,7 +61,11 @@ namespace BankingApp.Core
             else
             {
                 Balance -= amount;
-                Transaction transaction = new Transaction(TransactionType.Withdraw, amount);
+                Transaction transaction = new Transaction(
+                    TransactionType.Withdraw,
+                    amount,
+                    "Withdraw"
+                );
                 transactions.Add(transaction);
                 return new OperationResult(true, "Withdraw successful.");
             }
@@ -85,9 +93,21 @@ namespace BankingApp.Core
 
             Balance -= amount;
             receiver.Balance += amount;
-            Transaction transaction = new Transaction(TransactionType.Transfer, amount);
-            transactions.Add(transaction);
-            Transaction receiverTransaction = new Transaction(TransactionType.Transfer, amount);
+
+            Transaction senderTransaction = new Transaction(
+                TransactionType.TransferOut,
+                amount,
+                $"Transfer to {receiver.AccountNumber}"
+            );
+
+            transactions.Add(senderTransaction);
+
+            Transaction receiverTransaction = new Transaction(
+                TransactionType.TransferIn,
+                amount,
+                $"Transfer from {AccountNumber}"
+            );
+
             receiver.transactions.Add(receiverTransaction);
             return new OperationResult(true, "Transfer successful.");
 

@@ -12,6 +12,8 @@ namespace BankingApp.Api.Persistence.Entities
 
         public DateTime Date { get; set; }
 
+        public string Description { get; set; } = string.Empty;
+
         public int BankAccountEntityId { get; set; }
 
         public BankAccountEntity? Account { get; set; }

@@ -31,7 +31,8 @@ namespace BankingApp.Api.Persistence
                     .Select(transaction => new Transaction(
                         transaction.Type,
                         transaction.Amount,
-                        transaction.Date))
+                        transaction.Date,
+                        transaction.Description))
                     .ToList();
 
                 BankAccount account = BankAccount.Restore(
@@ -66,6 +67,7 @@ namespace BankingApp.Api.Persistence
                         Type = transaction.Type,
                         Amount = transaction.Amount,
                         Date = transaction.Date,
+                        Description = transaction.Description
                     })
                     .ToList()
                 })

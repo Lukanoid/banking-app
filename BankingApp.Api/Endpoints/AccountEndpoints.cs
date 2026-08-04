@@ -171,7 +171,8 @@ namespace BankingApp.Api.Endpoints
                     {
                         Type = transaction.Type.ToString(),
                         Amount = transaction.Amount,
-                        Date = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss")
+                        Date = transaction.Date.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Description = transaction.Description
                     })
                     .ToList();
 
