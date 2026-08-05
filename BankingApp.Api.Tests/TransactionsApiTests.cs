@@ -31,6 +31,47 @@ namespace BankingApp.Api.Tests
             Assert.Equal(1000m, transaction.Amount);
             Assert.False(string.IsNullOrWhiteSpace(transaction.Date));
         }
+
+        [Fact]
+        public async Task GetTransaction_ShouldReturnTransferDescriptions_WhenTransferExist()
+        {
+            using CustomWebApplicationFactory factory = new CustomWebApplicationFactory();
+            using HttpClient client = factory.CreateClient();
+
+            AccountResponse sender = await CreateAccountAsync(client, "John Doe");
+            AccountResponse receiver = await CreateAccountAsync(client, "Vasil");
+
+            await client.PostAsJsonAsync($"/accounts/{sender.AccountNumber}/deposit", new MoneyRequest
+            {
+                Amount = 1000m
+            });
+
+            await client.PostAsJsonAsync($"/accounts/{sender.AccountNumber}/transfer", new TransferRequest
+            {
+                ReceiverAccountNumber = receiver.AccountNumber,
+                Amount = 100m
+            });
+
+            HttpResponseMessage senderResponse = await client.GetAsync($"/accounts/{sender.AccountNumber}/transactions");
+            HttpResponseMessage receiverResponse = await client.GetAsync($"/accounts/{receiver.AccountNumber}/transactions");
+
+            Assert.Equal(HttpStatusCode.OK, senderResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, receiverResponse.StatusCode);
+
+            List<TransactionResponse> senderTransactions = await ReadResponseAsync<List<TransactionResponse>>(senderResponse);
+            List<TransactionResponse> receiverTransactions = await ReadResponseAsync<List<TransactionResponse>>(receiverResponse);
+
+            Assert.Contains(senderTransactions, transaction =>
+                transaction.Type == "TransferOut" &&
+                transaction.Amount == 100m &&
+                transaction.Description == $"Transfer to {receiver.AccountNumber}");
+
+            Assert.Contains(receiverTransactions, transaction =>
+                transaction.Type == "TransferIn" &&
+                transaction.Amount == 100m &&
+                transaction.Description == $"Transfer from {sender.AccountNumber}");
+        }
+
         [Fact]
         public async Task GetTransactions_ShouldReturnNotFound_WhenAccountDoesNotExist()
         {

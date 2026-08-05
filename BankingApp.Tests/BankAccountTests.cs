@@ -180,7 +180,9 @@ namespace BankingApp.Tests
             Assert.Single(receiverTransactionHistory);
             Assert.Equal(2, transfererTransactionHistory.Count);
             Assert.Equal(TransactionType.TransferOut, transfererTransactionHistory[1].Type);
+            Assert.Equal($"Transfer to {receiver.AccountNumber}", transfererTransactionHistory[1].Description);
             Assert.Equal(TransactionType.TransferIn, receiverTransactionHistory[0].Type);
+            Assert.Equal($"Transfer from {transferer.AccountNumber}", receiverTransactionHistory[0].Description);
         }
 
         [Fact]
