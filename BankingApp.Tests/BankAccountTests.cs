@@ -290,5 +290,43 @@ namespace BankingApp.Tests
             Assert.Equal(2, transfererTransactionHistory.Count);
             Assert.Single(receiverTransactionHistory);
         }
+
+        [Fact]
+        public void UpdateOwnerName_ShouldUpdateTheName_WhenDataIsValid()
+        {
+            BankAccount account = new BankAccount("John Doe", "123");
+
+            OperationResult result = account.UpdateOwnerName("Vasil Stamboliyski");
+
+            Assert.Equal("Vasil Stamboliyski", account.OwnerName);
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Owner name updated successfully.", result.Message);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void UpdateOwnerName_ShouldFail_WhenDataISInvalid(string ownerName)
+        {
+            BankAccount account = new BankAccount("John Doe", "123");
+
+            OperationResult result = account.UpdateOwnerName(ownerName);
+
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Owner name cannot be empty.", result.Message);
+            Assert.Equal("John Doe", account.OwnerName);
+        }
+
+        [Fact]
+        public void UpdateOwnerName_ShouldTrimOwnerName_WhenNameHasExtraSpaces()
+        {
+            BankAccount account = new BankAccount("John Doe", "123");
+
+            OperationResult result = account.UpdateOwnerName("  Vasil Stamboliyski  ");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal("Vasil Stamboliyski", account.OwnerName);
+        }
     }
 }
