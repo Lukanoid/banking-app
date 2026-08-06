@@ -113,6 +113,18 @@ namespace BankingApp.Core
 
         }
 
+        public OperationResult UpdateOwnerName(string ownerName)
+        {
+            if(string.IsNullOrWhiteSpace(ownerName))
+            {
+                return new OperationResult(false, "Owner name cannot be empty.");
+            }
+
+            OwnerName = ownerName.Trim();
+
+            return new OperationResult(true, "Owner name updated successfully.");
+        }
+
         public IReadOnlyList<Transaction> GetTransactionHistory()
         {
             return transactions.AsReadOnly();
