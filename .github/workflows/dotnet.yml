@@ -9,6 +9,8 @@ name: .NET Tests
     branches:
       - master
       - main
+      
+  workflow_dispatch: {}
 
 jobs:
   build-and-test:
