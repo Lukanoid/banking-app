@@ -49,31 +49,67 @@ namespace BankingApp.Api.Persistence
 
         public void SaveAccounts(IReadOnlyList<BankAccount> accounts)
         {
-            List<BankAccountEntity> existingAccounts = context.Accounts
+            List<BankAccountEntity> existingAccountsEntities = context.Accounts
                 .Include(account => account.Transactions)
                 .ToList();
 
-            context.Accounts.RemoveRange(existingAccounts);
+            HashSet<string> currentAccountNumber = accounts
+                .Select(account => account.AccountNumber)
+                .ToHashSet();
 
-            List<BankAccountEntity> accountEntities = accounts
-                .Select(account => new BankAccountEntity
+            foreach(BankAccountEntity existingAccountEntity in existingAccountsEntities)
+            {
+                if (!currentAccountNumber.Contains(existingAccountEntity.AccountNumber))
                 {
-                    OwnerName = account.OwnerName,
-                    AccountNumber = account.AccountNumber,
-                    Balance = account.Balance,
-                    Transactions = account.GetTransactionHistory()
-                    .Select(transaction => new TransactionEntity
+                    context.Accounts.Remove(existingAccountEntity);
+                }
+            }
+
+            foreach(BankAccount account in accounts)
+            {
+                BankAccountEntity? accountEntity = existingAccountsEntities
+                    .FirstOrDefault(existingAccount => existingAccount.AccountNumber == account.AccountNumber);
+
+                if(accountEntity == null)
+                {
+                    BankAccountEntity newAccountEntity = new BankAccountEntity
+                    {
+                        OwnerName = account.OwnerName,
+                        AccountNumber = account.AccountNumber,
+                        Balance = account.Balance,
+                        Transactions = account.GetTransactionHistory()
+                           .Select(transaction => new TransactionEntity
+                           {
+                               Type = transaction.Type,
+                               Amount = transaction.Amount,
+                               Date = transaction.Date,
+                               Description = transaction.Description,
+                           })
+                           .ToList()
+                    };
+
+                    context.Accounts.Add(newAccountEntity);
+
+                    continue;
+                }
+
+                accountEntity.OwnerName = account.OwnerName;
+                accountEntity.Balance = account.Balance;
+
+                context.Transactions.RemoveRange(accountEntity.Transactions);
+                accountEntity.Transactions.Clear();
+
+                foreach(Transaction transaction in account.GetTransactionHistory())
+                {
+                    accountEntity.Transactions.Add(new TransactionEntity
                     {
                         Type = transaction.Type,
-                        Amount = transaction.Amount,
+                        Amount = transaction.Amount, 
                         Date = transaction.Date,
-                        Description = transaction.Description
-                    })
-                    .ToList()
-                })
-                .ToList();
-
-            context.Accounts.AddRange(accountEntities);
+                        Description = transaction.Description,
+                    });
+                }
+            }
 
             context.SaveChanges();
         }
