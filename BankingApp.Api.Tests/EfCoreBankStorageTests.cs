@@ -1,7 +1,8 @@
 ﻿using BankingApp.Api.Persistence;
+using BankingApp.Api.Persistence.Entities;
 using BankingApp.Core;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Api.Tests
 {
@@ -164,6 +165,60 @@ namespace BankingApp.Api.Tests
                         account.OwnerName == "Vasil" &&
                         account.AccountNumber == "456" &&
                         account.Balance == 500m);
+                }
+            }
+            finally
+            {
+                DeleteDatabaseFiles(databasePath);
+            }
+        }
+
+        [Fact]
+        public void SaveAccounts_ShouldUpdateExistingAccount_WithoutChangingDatabaseId()
+        {
+            string databasePath = CreateDatabasePath();
+
+            try
+            {
+                using (BankDbContext context = CreateContext(databasePath))
+                {
+                    context.Database.EnsureCreated();
+
+                    EfCoreBankStorage storage = new EfCoreBankStorage(context);
+
+                    BankAccount account = new BankAccount("John Doe", "123");
+
+                    storage.SaveAccounts(new List<BankAccount> { account });
+                }
+
+                int originalDatabaseId;
+
+                using (BankDbContext context = CreateContext(databasePath))
+                {
+                    originalDatabaseId = context.Accounts.Single().Id;
+                }
+
+                using (BankDbContext context = CreateContext(databasePath))
+                {
+                    EfCoreBankStorage storage = new EfCoreBankStorage(context);
+
+                    BankAccount updatedAccount = BankAccount.Restore(
+                        "Vasil Stamboliyski",
+                        "123",
+                        500m,
+                        new List<Transaction>());
+
+                    storage.SaveAccounts(new List<BankAccount> { updatedAccount });
+                }
+
+                using (BankDbContext context = CreateContext(databasePath))
+                {
+                    BankAccountEntity savedAccount = context.Accounts.Single();
+
+                    Assert.Equal(originalDatabaseId, savedAccount.Id);
+                    Assert.Equal("Vasil Stamboliyski", savedAccount.OwnerName);
+                    Assert.Equal("123", savedAccount.AccountNumber);
+                    Assert.Equal(500m, savedAccount.Balance);
                 }
             }
             finally
