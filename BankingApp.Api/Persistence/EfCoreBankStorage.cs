@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Api.Persistence
 {
-    public class SqliteBankStorage : IBankStorage
+    public class EfCoreBankStorage : IBankStorage
     {
         private readonly BankDbContext context;
 
-        public SqliteBankStorage(BankDbContext context)
+        public EfCoreBankStorage(BankDbContext context)
         {
             this.context = context;
 

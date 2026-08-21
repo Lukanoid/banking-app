@@ -27,7 +27,7 @@ namespace BankingApp.Api
                     options.UseNpgsql(connectionString);
                 });
 
-                builder.Services.AddScoped<IBankStorage, SqliteBankStorage>();
+                builder.Services.AddScoped<IBankStorage, EfCoreBankStorage>();
             }
 
             var app = builder.Build();

@@ -5,7 +5,7 @@ using Microsoft.Data.Sqlite;
 
 namespace BankingApp.Api.Tests
 {
-    public class SqliteBankStorageTests
+    public class EfCoreBankStorageTests
     {
         [Fact]
         public void LoadAccounts_ShouldReturnEmptyList_WhenDatabaseIsEmpty()
@@ -17,7 +17,7 @@ namespace BankingApp.Api.Tests
                 using BankDbContext context = CreateContext(databasePath);
                 context.Database.EnsureCreated();
 
-                SqliteBankStorage storage = new SqliteBankStorage(context);
+                EfCoreBankStorage storage = new EfCoreBankStorage(context);
 
                 List<BankAccount> accounts = storage.LoadAccounts();
 
@@ -40,7 +40,7 @@ namespace BankingApp.Api.Tests
                 {
                     saveContext.Database.EnsureCreated();
 
-                    SqliteBankStorage saveStorage = new SqliteBankStorage(saveContext);
+                    EfCoreBankStorage saveStorage = new EfCoreBankStorage(saveContext);
 
                     BankAccount account = new BankAccount("John Doe", "123");
 
@@ -52,7 +52,7 @@ namespace BankingApp.Api.Tests
 
                 using (BankDbContext loadContext = CreateContext(databasePath))
                 {
-                    SqliteBankStorage loadStorage = new SqliteBankStorage(loadContext);
+                    EfCoreBankStorage loadStorage = new EfCoreBankStorage(loadContext);
 
                     List<BankAccount> loadedAccounts = loadStorage.LoadAccounts();
 
@@ -81,7 +81,7 @@ namespace BankingApp.Api.Tests
                 {
                     saveContext.Database.EnsureCreated();
 
-                    SqliteBankStorage saveStorage = new SqliteBankStorage(saveContext);
+                    EfCoreBankStorage saveStorage = new EfCoreBankStorage(saveContext);
 
                     BankAccount account = new BankAccount("John Doe", "123");
 
@@ -96,7 +96,7 @@ namespace BankingApp.Api.Tests
 
                 using (BankDbContext loadContext = CreateContext(databasePath))
                 {
-                    SqliteBankStorage loadStorage = new SqliteBankStorage(loadContext);
+                    EfCoreBankStorage loadStorage = new EfCoreBankStorage(loadContext);
 
                     List<BankAccount> loadedAccounts = loadStorage.LoadAccounts();
 
@@ -132,7 +132,7 @@ namespace BankingApp.Api.Tests
                 {
                     saveContext.Database.EnsureCreated();
 
-                    SqliteBankStorage saveStorage = new SqliteBankStorage(saveContext);
+                    EfCoreBankStorage saveStorage = new EfCoreBankStorage(saveContext);
 
                     BankAccount firstAccount = new BankAccount("John Doe", "123");
                     BankAccount secondAccount = new BankAccount("Vasil", "456");
@@ -149,7 +149,7 @@ namespace BankingApp.Api.Tests
 
                 using (BankDbContext loadContext = CreateContext(databasePath))
                 {
-                    SqliteBankStorage loadStorage = new SqliteBankStorage(loadContext);
+                    EfCoreBankStorage loadStorage = new EfCoreBankStorage(loadContext);
 
                     List<BankAccount> loadedAccounts = loadStorage.LoadAccounts();
 
