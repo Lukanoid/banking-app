@@ -17,17 +17,18 @@ namespace BankingApp.Api
 
             builder.Services.AddSingleton<BankSystem>();
 
-            string DataDirectory = Path.Combine(builder.Environment.ContentRootPath, "Data");
-            Directory.CreateDirectory(DataDirectory);
-
-            string databasePath = Path.Combine(DataDirectory, "banking.db");
-
-            builder.Services.AddDbContext<BankDbContext>(options =>
+            if (!builder.Environment.IsEnvironment("Testing"))
             {
-                options.UseSqlite($"data Source={databasePath}");
-            });
+                string connectionString = builder.Configuration.GetConnectionString("PostgresConnection")
+                ?? throw new InvalidOperationException("Postgres connection string is missing.");
 
-            builder.Services.AddScoped<IBankStorage, SqliteBankStorage>();
+                builder.Services.AddDbContext<BankDbContext>(options =>
+                {
+                    options.UseNpgsql(connectionString);
+                });
+
+                builder.Services.AddScoped<IBankStorage, SqliteBankStorage>();
+            }
 
             var app = builder.Build();
 
