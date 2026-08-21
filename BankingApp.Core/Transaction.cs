@@ -11,13 +11,13 @@ namespace BankingApp.Core
         public string Description { get; private set; }
 
         public Transaction(TransactionType type, decimal amount)
-            :this(type, amount, DateTime.Now, string.Empty)
+            :this(type, amount, DateTime.UtcNow, string.Empty)
         {
 
         }
 
         public Transaction(TransactionType type, decimal amount, string description)
-            : this(type, amount, DateTime.Now, description)
+            : this(type, amount, DateTime.UtcNow, description)
         {
 
         }

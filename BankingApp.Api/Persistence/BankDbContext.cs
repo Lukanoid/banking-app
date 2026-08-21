@@ -25,6 +25,10 @@ namespace BankingApp.Api.Persistence
                 .WithOne(transaction => transaction.Account)
                 .HasForeignKey(transaction => transaction.BankAccountEntityId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TransactionEntity>()
+                .Property(transaction => transaction.Type)
+                .HasConversion<string>();
         }
     }
 }

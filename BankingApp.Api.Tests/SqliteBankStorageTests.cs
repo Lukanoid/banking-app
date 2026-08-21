@@ -130,7 +130,7 @@ namespace BankingApp.Api.Tests
             {
                 using (BankDbContext saveContext = CreateContext(databasePath))
                 {
-                    saveContext.Database.Migrate();
+                    saveContext.Database.EnsureCreated();
 
                     SqliteBankStorage saveStorage = new SqliteBankStorage(saveContext);
 
