@@ -178,6 +178,34 @@ namespace BankingApp.Api.Endpoints
 
                 return Results.Ok(transactions);
             });
+
+            accounts.MapPut("/{accountNumber}/owner", (string accountNumber, UpdateOwnerNameRequest request, BankSystem banksystem, IBankStorage storage) =>
+            {
+                BankAccount? account = banksystem.FindAccount(accountNumber);
+
+                if(account == null)
+                {
+                    return Results.NotFound("Account not found.");
+                }
+
+                OperationResult result = account.UpdateOwnerName(request.OwnerName);
+
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest(result.Message);
+                }
+
+                storage.SaveAccounts(banksystem.GetAllAccounts());
+
+                AccountResponse response = new AccountResponse
+                {
+                    OwnerName = account.OwnerName,
+                    AccountNumber = account.AccountNumber,
+                    Balance = account.Balance,
+                };
+
+                return Results.Ok(response);
+            });
         }
     }
 }
