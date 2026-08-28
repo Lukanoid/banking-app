@@ -30,7 +30,19 @@ namespace BankingApp.Api
                 builder.Services.AddScoped<IBankStorage, EfCoreBankStorage>();
             }
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ReactClient", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173/")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
+
+            app.UseCors("ReactClient");
 
             if (!app.Environment.IsEnvironment("Testing"))
             {
