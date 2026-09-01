@@ -4,7 +4,8 @@ import {
     deposit,
     withdraw,
     getAccount,
-    getTransactions
+    getTransactions,
+    updateOwnerName
 } from "../api/accountsApi.js";
 
 
@@ -15,6 +16,7 @@ function AccountDetailsPage() {
     const [amount, setAmount] = useState("");
     const [error, setError] = useState("");
     const [transactions, setTransactions] = useState([]);
+    const [newOwnerName, setNewOwnerName] = useState("");
 
 
     async function loadAccount() {
@@ -58,6 +60,20 @@ function AccountDetailsPage() {
             setAmount("")
             await loadAccount();
             await loadTransactions();
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
+    async function handleUpdateOwnerName(event){
+        event.preventDefault();
+
+        try {
+            const updatedAccount = await updateOwnerName(accountNumber, newOwnerName);
+
+            setAccount(updatedAccount)
+            setNewOwnerName("");
+            setError("")
         } catch (error) {
             setError(error.message);
         }
@@ -108,6 +124,18 @@ function AccountDetailsPage() {
 
             <p>Account Number: {account.accountNumber}</p>
             <p>Balance: {account.balance}</p>
+
+            <h3>Update Owner Name</h3>
+
+            <form onSubmit={handleUpdateOwnerName}>
+                <input 
+                value={newOwnerName}
+                onChange={(event) => setNewOwnerName(event.target.value)}
+                placeholder="New owner name"
+                 />
+
+                 <button type="submit">Update Owner</button>
+            </form>
 
             <h3>Actions</h3>
 

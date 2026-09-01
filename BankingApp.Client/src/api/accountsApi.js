@@ -77,3 +77,19 @@ export async function getTransactions(accountNumber) {
 
     return await response.json();
 }
+
+export async function updateOwnerName(accountNumber, ownerName){
+    const response = await fetch(`${API_BASE_URL}/accounts/${accountNumber}/owner`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ownerName })
+    });
+
+    if(!response.ok){
+        throw new Error("Failed to update owner name.")
+    }
+
+    return await response.json();
+}
