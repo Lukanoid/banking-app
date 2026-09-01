@@ -1,42 +1,76 @@
 # Banking App
 
-A simple banking system built with C# and ASP.NET Core.
+A full-stack banking application built with **C#**, **ASP.NET Core Minimal API**, **Entity Framework Core**, **PostgreSQL**, and **React**.
 
-The project started as a core banking logic application and was later expanded with a Web API, SQLite persistence, unit tests, API integration tests, SQLite storage tests, and GitHub Actions CI.
-
-![.NET Tests](https://github.com/Lukanoid/banking-app/actions/workflows/dotnet.yml/badge.svg)
+The project started as a backend learning project and evolved into a full-stack application with a real database, API tests, GitHub Actions, and a React frontend.
 
 ---
 
 ## Features
 
+### Backend
+
 - Create bank accounts
-- Find accounts by account number
+- View all accounts
+- View account by account number
 - Deposit money
 - Withdraw money
 - Transfer money between accounts
+- Update account owner name
 - View transaction history
-- Save and load accounts using SQLite database persistence
-- REST API using ASP.NET Core Minimal APIs
-- Swagger UI for testing API endpoints
-- Unit tests for core business logic
-- API integration tests for endpoints
-- SQLite storage integration tests
-- GitHub Actions workflow for automatic test runs
+- Store account and transaction data in PostgreSQL
+- Use Entity Framework Core migrations
+- Swagger/OpenAPI support
+- GitHub Actions CI pipeline
+
+### Frontend
+
+- React client created with Vite
+- View all accounts
+- Create new accounts
+- Open account details page
+- Deposit and withdraw money
+- Update owner name
+- View transaction history
+- Transfer money from a separate transfer page
+- Styled UI with CSS
+
+---
+
+## Technologies Used
+
+### Backend
+
+- C#
+- .NET 8
+- ASP.NET Core Minimal API
+- Entity Framework Core
+- PostgreSQL
+- Npgsql Entity Framework Core Provider
+- Swagger / OpenAPI
+- xUnit
+- Microsoft.AspNetCore.Mvc.Testing
+- GitHub Actions
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- React Router
+- CSS
+
+### Database Tools
+
+- PostgreSQL
+- pgAdmin
 
 ---
 
 ## Project Structure
 
 ```text
-BankingApp
-├── BankingApp.Core
-│   ├── BankAccount.cs
-│   ├── BankSystem.cs
-│   ├── OperationResult.cs
-│   ├── Transaction.cs
-│   └── TransactionType.cs
-│
+banking-app
 ├── BankingApp.Api
 │   ├── Endpoints
 │   │   └── AccountEndpoints.cs
@@ -44,31 +78,40 @@ BankingApp
 │   │   ├── Entities
 │   │   │   ├── BankAccountEntity.cs
 │   │   │   └── TransactionEntity.cs
-│   │   ├── Models
+│   │   ├── Migrations
 │   │   ├── BankDbContext.cs
-│   │   ├── IBankStorage.cs
-│   │   ├── JsonBankStorage.cs
-│   │   └── SqliteBankStorage.cs
+│   │   ├── EfCoreBankStorage.cs
+│   │   └── IBankStorage.cs
 │   ├── Requests
 │   ├── Responses
 │   └── Program.cs
 │
+├── BankingApp.Core
+│   ├── BankAccount.cs
+│   ├── BankSystem.cs
+│   ├── OperationResult.cs
+│   ├── Transaction.cs
+│   └── TransactionType.cs
+│
 ├── BankingApp.Console
-│   └── Console application
 │
 ├── BankingApp.Tests
-│   └── Unit tests for Core logic
 │
 ├── BankingApp.Api.Tests
-│   ├── AccountsApiTests.cs
-│   ├── DepositsApiTests.cs
-│   ├── WithdrawalsApiTests.cs
-│   ├── TransfersApiTests.cs
-│   ├── TransactionsApiTests.cs
-│   ├── SqliteBankStorageTests.cs
-│   ├── ApiTestHelpers.cs
-│   ├── CustomWebApplicationFactory.cs
-│   └── TestBankStorage.cs
+│
+├── BankingApp.Client
+│   ├── src
+│   │   ├── api
+│   │   │   └── accountsApi.js
+│   │   ├── pages
+│   │   │   ├── AccountsPage.jsx
+│   │   │   ├── AccountDetailsPage.jsx
+│   │   │   └── TransferPage.jsx
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
 │
 └── .github
     └── workflows
@@ -77,311 +120,230 @@ BankingApp
 
 ---
 
-## Technologies Used
+## Backend Overview
 
-- C#
-- .NET 8
-- ASP.NET Core Minimal API
-- Entity Framework Core
-- SQLite
-- xUnit
-- Microsoft.AspNetCore.Mvc.Testing
-- Swagger / OpenAPI
-- GitHub Actions
+The backend is built with ASP.NET Core Minimal API.
 
----
-
-## Core Concepts
-
-The main business logic is stored inside `BankingApp.Core`.
-
-### BankAccount
-
-Responsible for account-level operations:
-
-- Deposit
-- Withdraw
-- Transfer
-- Transaction history
-
-### BankSystem
-
-Responsible for managing multiple accounts:
-
-- Creating accounts
-- Finding accounts
-- Returning all accounts
-- Loading saved accounts
-
-### OperationResult
-
-Used to return the result of banking operations.
-
-Example:
-
-```csharp
-public class OperationResult
-{
-    public bool IsSuccess { get; }
-    public string Message { get; }
-
-    public OperationResult(bool isSuccess, string message)
-    {
-        IsSuccess = isSuccess;
-        Message = message;
-    }
-}
-```
-
----
-
-## Persistence
-
-The project uses SQLite database persistence through Entity Framework Core.
-
-The main database classes are located in:
+The main endpoint setup is kept in:
 
 ```text
-BankingApp.Api/Persistence
+BankingApp.Api/Endpoints/AccountEndpoints.cs
 ```
 
-### BankDbContext
-
-`BankDbContext` is the EF Core database context. It represents the connection between the application and the database.
-
-It contains:
+The core business logic is stored in:
 
 ```text
-Accounts table
-Transactions table
+BankingApp.Core
 ```
 
-### BankAccountEntity
+This keeps the project clean by separating:
 
-Represents a bank account in the database.
-
-### TransactionEntity
-
-Represents a transaction in the database.
-
-### SqliteBankStorage
-
-Handles saving and loading accounts from the SQLite database.
-
-The API depends on the `IBankStorage` interface, which allows the storage implementation to be changed without changing the endpoint logic.
+```text
+API layer         → HTTP endpoints
+Core layer        → banking logic
+Persistence layer → database storage
+Frontend layer    → React UI
+```
 
 ---
 
 ## API Endpoints
 
-### Root
-
-```http
-GET /
-```
-
-Returns a simple message confirming that the API is running.
-
----
-
-### Accounts
-
-```http
-GET /accounts
-```
-
-Returns all accounts.
-
-```http
-POST /accounts
-```
-
-Creates a new account.
-
-Request body:
-
-```json
-{
-  "ownerName": "John Doe"
-}
-```
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/accounts` | Get all accounts |
+| POST | `/accounts` | Create new account |
+| GET | `/accounts/{accountNumber}` | Get account by account number |
+| POST | `/accounts/{accountNumber}/deposit` | Deposit money |
+| POST | `/accounts/{accountNumber}/withdraw` | Withdraw money |
+| POST | `/accounts/{accountNumber}/transfer` | Transfer money |
+| PUT | `/accounts/{accountNumber}/owner` | Update account owner name |
+| GET | `/accounts/{accountNumber}/transactions` | Get transaction history |
 
 ---
 
-### Get Account By Number
+## Database
 
-```http
-GET /accounts/{accountNumber}
+The application uses **PostgreSQL** as the main database.
+
+Entity Framework Core is used for:
+
+- Database mapping
+- Relationships
+- Migrations
+- Saving and loading data
+
+The main database context is:
+
+```text
+BankingApp.Api/Persistence/BankDbContext.cs
 ```
 
-Returns a specific account by account number.
+The main storage class is:
+
+```text
+BankingApp.Api/Persistence/EfCoreBankStorage.cs
+```
+
+The database contains:
+
+```text
+Accounts
+Transactions
+__EFMigrationsHistory
+```
+
+`__EFMigrationsHistory` is created by Entity Framework Core and stores which migrations have already been applied.
 
 ---
 
-### Deposit
+## Entity Framework Core Migrations
 
-```http
-POST /accounts/{accountNumber}/deposit
+The project uses EF Core migrations to manage database schema changes.
+
+Migrations are stored in:
+
+```text
+BankingApp.Api/Persistence/Migrations
 ```
 
-Request body:
+The API applies pending migrations automatically on startup using:
 
-```json
-{
-  "amount": 1000
-}
+```csharp
+context.Database.Migrate();
 ```
+
+This allows the database structure to evolve safely when new columns, tables, or relationships are added.
 
 ---
 
-### Withdraw
+## Important Security Note
 
-```http
-POST /accounts/{accountNumber}/withdraw
+The PostgreSQL connection string should not be committed to GitHub.
+
+The project uses **User Secrets** for local database credentials.
+
+Example setup:
+
+```bash
+dotnet user-secrets init --project BankingApp.Api
 ```
 
-Request body:
-
-```json
-{
-  "amount": 100
-}
+```bash
+dotnet user-secrets set "ConnectionStrings:PostgresConnection" "Host=localhost;Port=5432;Database=banking_app;Username=postgres;Password=your_password" --project BankingApp.Api
 ```
+
+The real password should stay only on the local machine.
 
 ---
 
-### Transfer
+## Running the Backend
 
-```http
-POST /accounts/{accountNumber}/transfer
-```
+Make sure PostgreSQL is running and that a database named `banking_app` exists.
 
-Request body:
-
-```json
-{
-  "receiverAccountNumber": "12345",
-  "amount": 100
-}
-```
-
----
-
-### Transaction History
-
-```http
-GET /accounts/{accountNumber}/transactions
-```
-
-Returns the transaction history for an account.
-
----
-
-## Running the API
-
-From the solution folder, run:
+Run the API:
 
 ```bash
 dotnet run --project BankingApp.Api
 ```
 
-Then open Swagger in the browser:
+Then open Swagger:
 
 ```text
-https://localhost:xxxx/swagger
+https://localhost:<port>/swagger
 ```
 
-The exact port may be different on your machine.
+Example:
+
+```text
+https://localhost:7031/swagger
+```
+
+---
+
+## Running the Frontend
+
+Go into the React client folder:
+
+```bash
+cd BankingApp.Client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the Vite development server:
+
+```bash
+npm run dev
+```
+
+The React app usually runs at:
+
+```text
+http://localhost:5173
+```
+
+The backend API must also be running for the frontend to load accounts.
+
+---
+
+## CORS
+
+The API allows the React frontend to call it through a CORS policy.
+
+In development, the React app runs on:
+
+```text
+http://localhost:5173
+```
+
+The API allows that origin using:
+
+```csharp
+.WithOrigins("http://localhost:5173")
+```
+
+The origin should not include a trailing slash.
+
+Correct:
+
+```text
+http://localhost:5173
+```
+
+Incorrect:
+
+```text
+http://localhost:5173/
+```
 
 ---
 
 ## Running Tests
 
-Run the Core unit tests:
-
-```bash
-dotnet test BankingApp.Tests/BankingApp.Tests.csproj
-```
-
-Run the API integration tests and SQLite storage tests:
-
-```bash
-dotnet test BankingApp.Api.Tests/BankingApp.Api.Tests.csproj
-```
-
-Run all tests:
+Run all backend tests:
 
 ```bash
 dotnet test
 ```
 
----
+The solution includes:
 
-## Testing
+- Core unit tests
+- API integration tests
+- EF Core storage tests
 
-The project contains three main types of tests.
-
-### Unit Tests
-
-Located in:
-
-```text
-BankingApp.Tests
-```
-
-These tests check the core business logic directly, for example:
-
-- Creating accounts
-- Depositing money
-- Withdrawing money
-- Transferring money
-- Transaction history
-- Validation rules
-
-### API Integration Tests
-
-Located in:
-
-```text
-BankingApp.Api.Tests
-```
-
-These tests start the API in memory and send real HTTP requests using `HttpClient`.
-
-They test the full API flow:
-
-```text
-HttpClient
--> API endpoint
--> BankSystem
--> BankAccount
--> API response
-```
-
-The API tests use `CustomWebApplicationFactory` and `TestBankStorage` so that endpoint tests do not write to the real database.
-
-### SQLite Storage Integration Tests
-
-Located in:
-
-```text
-BankingApp.Api.Tests/SqliteBankStorageTests.cs
-```
-
-These tests check that `SqliteBankStorage` can correctly:
-
-- Load an empty database
-- Save and load accounts
-- Save and load transactions
-- Save and load multiple accounts
-
-Each SQLite storage test uses a temporary database file, so the real local database is not affected.
+The API tests use a test storage implementation so they do not depend on the real PostgreSQL database.
 
 ---
 
-## GitHub Actions CI
+## GitHub Actions
 
-This project uses GitHub Actions to automatically run tests when code is pushed.
+The repository includes a GitHub Actions workflow for running .NET tests automatically.
 
 Workflow file:
 
@@ -389,77 +351,110 @@ Workflow file:
 .github/workflows/dotnet.yml
 ```
 
-The workflow runs:
+The workflow runs on pushes and pull requests to:
 
-- Core unit tests
-- API integration tests
-- SQLite storage integration tests
+```text
+master
+main
+```
 
-This helps make sure new changes do not break existing functionality.
+It can also be run manually from the GitHub Actions tab.
 
 ---
 
-## Example API Response
+## Current Frontend Pages
 
-Example response after creating an account:
+### Accounts Page
 
-```json
-{
-  "ownerName": "John Doe",
-  "accountNumber": "12345",
-  "balance": 0
-}
+Route:
+
+```text
+/
 ```
 
-Example response after deposit:
+Features:
 
-```json
-{
-  "message": "Deposit successful.",
-  "balance": 1000
-}
+- Shows all accounts
+- Creates a new account
+- Links to account details
+
+### Account Details Page
+
+Route:
+
+```text
+/accounts/{accountNumber}
 ```
 
-Example response after transfer:
+Features:
 
-```json
-{
-  "message": "Transfer successful.",
-  "senderBalance": 900,
-  "receiverBalance": 100
-}
+- Shows account owner
+- Shows account number
+- Shows balance
+- Deposit money
+- Withdraw money
+- Update owner name
+- View transaction history
+- Link to transfer page
+
+### Transfer Page
+
+Route:
+
+```text
+/accounts/{accountNumber}/transfer
 ```
+
+Features:
+
+- Shows sender account
+- Shows sender owner name
+- Allows entering receiver account number
+- Allows entering transfer amount
+- Sends money between accounts
 
 ---
 
-## Notes
+## Current Full-Stack Flow
 
-The SQLite database file is used only for local persistence and should not be committed to GitHub.
-
-The local data folder is ignored with `.gitignore`:
-
-```gitignore
-/BankingApp.Api/Data/
+```text
+React frontend
+    ↓
+ASP.NET Core API
+    ↓
+Entity Framework Core
+    ↓
+PostgreSQL
 ```
+
+The React frontend does not talk directly to the database. It sends HTTP requests to the ASP.NET Core API, and the API handles the banking logic and database updates.
 
 ---
 
 ## Future Improvements
 
-Possible future improvements:
+Planned improvements:
 
-- Add account update endpoint
-- Add account delete endpoint
+- Add delete / close account endpoint
+- Prevent closing accounts with non-zero balance
+- Improve frontend error messages from backend responses
+- Add loading indicators
+- Add better form validation in React
+- Add transaction IDs to API responses
+- Add transaction filtering by type or date
+- Improve EF Core storage to update only affected accounts and transactions
 - Add authentication and users
-- Add database migrations
-- Improve transaction details
-- Add account ownership
-- Add frontend UI
+- Add account ownership per user
 - Add Docker support
-- Add SQL Server support
+- Add deployment configuration
+- Add frontend tests
 
 ---
 
-## Author
+## Project Status
 
-Created by [Lukanoid](https://github.com/Lukanoid)
+The project currently supports a working full-stack banking flow.
+
+Accounts can be created, viewed, updated, and used for deposits, withdrawals, transfers, and transaction history.
+
+The backend uses ASP.NET Core and PostgreSQL, while the frontend uses React with Vite and React Router.
