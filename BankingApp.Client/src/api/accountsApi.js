@@ -2,7 +2,7 @@ const API_BASE_URL = "https://localhost:7031";
 
 export async function getAccounts(){
     const response = await fetch(`${API_BASE_URL}/accounts`);
-    
+
     if(!response.ok){
         throw new Error("Failed to load accounts.")
     }
@@ -21,7 +21,7 @@ export async function getAccount(accountNumber){
 }
 
 export async function deposit(accountNumber, amount) {
-    const response = await fetch(`${API_BASE_URL}/accounts/${accountNumber}/deposit`{
+    const response = await fetch(`${API_BASE_URL}/accounts/${accountNumber}/deposit`,{
         method: "POST",
         headers: {
             "Content-Type": "application/json",
