@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
 import AccountDetailsPage from "./pages/AccountDetailsPage";
 import AccountsPage from "./pages/AccountsPage";
+import { TransferPage } from "./pages/TransferPage";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
           <Route
             path="/accounts/:accountNumber"
             element={<AccountDetailsPage />}
+          />
+          <Route 
+          path="/accounts/:accountNumber/transfer"
+          element={<TransferPage />}
           />
         </Routes>
       </main>

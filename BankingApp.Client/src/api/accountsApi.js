@@ -93,3 +93,22 @@ export async function updateOwnerName(accountNumber, ownerName){
 
     return await response.json();
 }
+
+export async function transfer(senderAccountNumber, receiverAccountNumber, amount) {
+    const response = await fetch(`${API_BASE_URL}/accounts/${senderAccountNumber}/transfer`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            receiverAccountNumber,
+            amount,
+        }),
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to transfer money.")
+    }
+
+    return await response.json();
+}

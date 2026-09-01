@@ -65,7 +65,7 @@ function AccountDetailsPage() {
         }
     }
 
-    async function handleUpdateOwnerName(event){
+    async function handleUpdateOwnerName(event) {
         event.preventDefault();
 
         try {
@@ -128,30 +128,39 @@ function AccountDetailsPage() {
             <h3>Update Owner Name</h3>
 
             <form onSubmit={handleUpdateOwnerName}>
-                <input 
-                value={newOwnerName}
-                onChange={(event) => setNewOwnerName(event.target.value)}
-                placeholder="New owner name"
-                 />
+                <input
+                    value={newOwnerName}
+                    onChange={(event) => setNewOwnerName(event.target.value)}
+                    placeholder="New owner name"
+                />
 
-                 <button type="submit">Update Owner</button>
+                <button type="submit">Update Owner</button>
             </form>
 
             <h3>Actions</h3>
 
-            <input
-                value={amount}
-                onChange={(event) => setAmount(event.target.value)}
-                placeholder="Amount"
-                type="number"
-            />
-            <button type="button" onClick={handleDeposit}>
-                Deposit
-            </button>
+            <div className="actions-row">
+                <input
+                    value={amount}
+                    onChange={(event) => setAmount(event.target.value)}
+                    placeholder="Amount"
+                    type="number"
+                />
+                <button type="button" onClick={handleDeposit}>
+                    Deposit
+                </button>
 
-            <button type="button" onClick={handleWithdraw}>
-                Withdraw
-            </button>
+                <button type="button" onClick={handleWithdraw}>
+                    Withdraw
+                </button>
+
+                <Link
+                    className="transfer-link"
+                    to={`/accounts/${accountNumber}/transfer`}
+                >
+                    Transfer Money
+                </Link>
+            </div>
 
             <h3>Transactions</h3>
 
