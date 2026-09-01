@@ -67,3 +67,13 @@ export async function createAccount(ownerName){
 
     return await response.json();
 }
+
+export async function getTransactions(accountNumber) {
+    const response = await fetch(`${API_BASE_URL}/accounts/${accountNumber}/transactions`)
+
+    if(!response.ok){
+        throw new Error("Failed to laod transactions.")
+    }
+
+    return await response.json();
+}

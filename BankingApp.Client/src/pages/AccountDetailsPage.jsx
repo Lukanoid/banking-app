@@ -1,6 +1,11 @@
 import { useParams, Link } from "react-router";
 import { useState, useEffect } from "react";
-import { deposit, withdraw, getAccount } from "../api/accountsApi.js";
+import {
+    deposit,
+    withdraw,
+    getAccount,
+    getTransactions
+} from "../api/accountsApi.js";
 
 
 function AccountDetailsPage() {
@@ -9,6 +14,7 @@ function AccountDetailsPage() {
     const [account, setAccount] = useState(null);
     const [amount, setAmount] = useState("");
     const [error, setError] = useState("");
+    const [transactions, setTransactions] = useState([]);
 
 
     async function loadAccount() {
@@ -22,12 +28,24 @@ function AccountDetailsPage() {
         }
     }
 
+    async function loadTransactions() {
+        try {
+            const data = await getTransactions(accountNumber)
+
+            setTransactions(data);
+            setError("");
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
     async function handleDeposit() {
         try {
             await deposit(accountNumber, Number(amount));
 
             setAmount("");
             await loadAccount();
+            await loadTransactions();
         } catch (error) {
             setError(error.message);
         }
@@ -39,6 +57,7 @@ function AccountDetailsPage() {
 
             setAmount("")
             await loadAccount();
+            await loadTransactions();
         } catch (error) {
             setError(error.message);
         }
@@ -47,18 +66,24 @@ function AccountDetailsPage() {
     useEffect(() => {
         let ignore = false;
 
-        getAccount(accountNumber)
-            .then((data) => {
+        async function loadPageData() {
+            try {
+                const accountData = await getAccount(accountNumber);
+                const transactionsData = await getTransactions(accountNumber);
+
                 if (!ignore) {
-                    setAccount(data);
+                    setAccount(accountData);
+                    setTransactions(transactionsData);
                     setError("");
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 if (!ignore) {
                     setError(error.message);
                 }
-            });
+            }
+        }
+
+        loadPageData();
 
         return () => {
             ignore = true;
@@ -99,6 +124,21 @@ function AccountDetailsPage() {
             <button type="button" onClick={handleWithdraw}>
                 Withdraw
             </button>
+
+            <h3>Transactions</h3>
+
+            {transactions.length === 0 ? (
+                <p>No Transactions yet.</p>
+            ) : (
+                <ul>
+                    {transactions.map((transaction, index) => (
+                        <li key={index}>
+                            {transaction.type} - {transaction.amount}  {transaction.descriptiion} - {" "}
+                            {transaction.date}
+                        </li>
+                    ))}
+                </ul>
+            )}
 
             {error && <p>{error}</p>}
         </section>
